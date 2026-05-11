@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prova oral - Espanol Coach.app</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/prova.css">
+</head>
+<body>
+  <main class="page oral-page">
+    <aside class="coach-sidebar" aria-label="Navega&ccedil;&atilde;o do treino">
+      <a class="brand-lockup" href="index.html" aria-label="Espanol Coach.app">
+        <span class="brand-mark">EC</span>
+        <span>Espanol Coach.app</span>
+      </a>
+      <nav class="coach-nav">
+        <a href="index.html">Treino</a>
+        <a class="active" href="prova.html">Prova oral</a>
+        <a href="#questionArea">Vocabul&aacute;rio</a>
+        <a href="#resultArea">Hist&oacute;rico</a>
+        <a href="#feedbackArea">Progresso</a>
+      </nav>
+      <div class="sidebar-card">
+        <span class="mode-badge">Prova oral</span>
+        <strong>Pronto para treinar sua entrevista em espanhol?</strong>
+        <p>Configure o desafio, ou&ccedil;a a pergunta e responda com sua voz.</p>
+      </div>
+    </aside>
+
+    <div class="coach-workspace">
+      <header class="app-header">
+        <div class="header-topline">
+          <a class="back-link" href="index.html">Voltar ao treino principal</a>
+          <span class="mode-badge">Modo prova oral</span>
+        </div>
+        <h1>Espanol Coach.app</h1>
+        <p class="intro">Treine espanhol t&eacute;cnico com voz, entrevistas e feedback pr&aacute;tico.</p>
+      </header>
+
+      <section class="challenge-banner panel" aria-label="Convite para treinar">
+        <div>
+          <span class="section-label">Desafio do dia</span>
+          <h2>Comece uma rodada de espanhol profissional.</h2>
+          <p>Uma pergunta por vez, feedback claro e progresso vis&iacute;vel at&eacute; o resultado final.</p>
+        </div>
+        <a class="button-link" href="#startExamButton">Iniciar desafio oral</a>
+      </section>
+
+      <section class="exam-config panel" aria-label="Configura&ccedil;&atilde;o da prova oral">
+        <div class="panel-title">
+          <span class="step-badge">1</span>
+          <div>
+            <h2>Monte seu treino</h2>
+            <p>Escolha dificuldade, tema e quantidade de perguntas.</p>
+          </div>
+        </div>
+
+        <div class="config-grid">
+          <div>
+            <label for="examDifficulty">Dificuldade</label>
+            <select id="examDifficulty">
+              <option value="basico">B&aacute;sico</option>
+              <option value="intermediario">Intermedi&aacute;rio</option>
+              <option value="avancado">Avan&ccedil;ado</option>
+            </select>
+          </div>
+          <div>
+            <label for="examTheme">Tema</label>
+            <select id="examTheme">
+              <option value="entrevista">Entrevista</option>
+              <option value="suporte">Suporte t&eacute;cnico</option>
+              <option value="desenvolvimento">Desenvolvimento web</option>
+              <option value="financeiro">Sistema financeiro</option>
+              <option value="fiserv">Fintech / Fiserv</option>
+              <option value="reuniao">Reuni&atilde;o</option>
+              <option value="comunicacao">Comunica&ccedil;&atilde;o profissional</option>
+              <option value="misturado">Misturado</option>
+            </select>
+          </div>
+          <div>
+            <label for="examCount">Quantidade de perguntas</label>
+            <select id="examCount">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="startExamButton" type="button">Iniciar prova</button>
+        </div>
+
+        <p class="notice">A corre&ccedil;&atilde;o de pron&uacute;ncia &eacute; aproximada, baseada na transcri&ccedil;&atilde;o do navegador. Para an&aacute;lise fon&eacute;tica perfeita seria necess&aacute;rio usar uma API especializada.</p>
+        <p id="supportWarning" class="message" role="status"></p>
+      </section>
+
+      <section id="questionArea" class="question-area panel" aria-live="polite">
+        <div class="question-header">
+          <div>
+            <span class="section-label">Desafio atual</span>
+            <h2 id="questionText">Inicie a prova para carregar a primeira pergunta.</h2>
+          </div>
+          <div class="question-badges">
+            <span id="questionCounter" class="badge">0/0</span>
+            <span id="questionTheme" class="tag">Tema</span>
+          </div>
+        </div>
+        <div class="exam-progress" aria-label="Progresso da prova">
+          <div class="progress-meta">
+            <span>Progresso</span>
+            <strong id="examProgressText">0%</strong>
+          </div>
+          <div class="progress-track">
+            <span id="examProgressBar" class="progress-fill"></span>
+          </div>
+        </div>
+        <div id="translationBox" class="translation-box"></div>
+        <div class="actions">
+          <button id="toggleTranslationButton" class="button-light" type="button" disabled>Mostrar tradu&ccedil;&atilde;o</button>
+          <button id="listenQuestionButton" class="button-secondary" type="button" disabled>Ouvir pergunta</button>
+        </div>
+      </section>
+
+      <section class="record-panel panel">
+        <div class="record-header">
+          <div>
+            <span class="section-label">Pr&aacute;tica ativa</span>
+            <h2>Resposta por voz</h2>
+          </div>
+          <span id="recordingStatus" class="recording-status">Parado</span>
+        </div>
+        <div class="actions">
+          <button id="recordButton" class="record-button" type="button" disabled>Gravar resposta</button>
+          <button id="stopRecordButton" class="button-accent" type="button" disabled>Parar grava&ccedil;&atilde;o</button>
+        </div>
+        <div class="transcript-card">
+          <h3>Transcri&ccedil;&atilde;o</h3>
+          <p id="transcriptText">Sua resposta transcrita aparece aqui.</p>
+        </div>
+      </section>
+
+      <section id="feedbackArea" class="feedback-area panel">
+        <div class="panel-title">
+          <span class="step-badge">2</span>
+          <div>
+            <h2>Feedback</h2>
+            <p>Veja sua nota, vocabul&aacute;rio encontrado e sugest&otilde;es.</p>
+          </div>
+        </div>
+        <div id="feedbackContent" class="feedback-content empty-state">Responda uma pergunta para receber feedback.</div>
+        <div class="actions">
+          <button id="nextQuestionButton" type="button" disabled>Pr&oacute;xima pergunta</button>
+        </div>
+      </section>
+
+      <section id="resultArea" class="result-area panel">
+        <div class="panel-title">
+          <span class="step-badge">3</span>
+          <div>
+            <h2>Resultado final</h2>
+            <p>Resumo da sua sess&atilde;o de treino.</p>
+          </div>
+        </div>
+        <div id="resultContent" class="empty-state">O resultado aparece ao terminar a prova.</div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    window.__spanishOralExamModuleLoaded = false;
+    window.addEventListener("error", function (event) {
+      if (event.target && event.target.src && event.target.src.includes("js/prova.js")) {
+        loadOralExamFallback();
+      }
+    }, true);
+
+    function loadOralExamFallback() {
+      if (window.__spanishOralExamFallbackLoading || window.__spanishOralExamModuleLoaded) {
+        return;
+      }
+
+      window.__spanishOralExamFallbackLoading = true;
+      var script = document.createElement("script");
+      script.src = "js/prova.bundle.js";
+      document.body.appendChild(script);
+    }
+
+    setTimeout(function () {
+      if (!window.__spanishOralExamModuleLoaded) {
+        loadOralExamFallback();
+      }
+    }, 800);
+  </script>
+  <script type="module" src="js/prova.js"></script>
+</body>
+</html>
