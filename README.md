@@ -17,6 +17,17 @@ Abra o arquivo `index.html` no navegador.
 
 Para a prova oral, use o botao `Ir para prova oral` na tela principal ou abra `prova.html` diretamente.
 
+## Deploy na Netlify
+
+Este projeto e estatico e nao precisa de etapa de build.
+
+Configuracao recomendada na Netlify:
+
+- Build command: deixe vazio
+- Publish directory: `.`
+
+O arquivo `netlify.toml` ja define essa configuracao para deploy automatico a partir do GitHub.
+
 ## Requisitos
 
 - Navegador moderno com suporte a JavaScript.
