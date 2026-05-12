@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="css/prova.css">
 </head>
 <body>
-  <main class="page oral-page app-shell">
-    <aside class="coach-sidebar" aria-label="Navega&ccedil;&atilde;o do treino">
+  <main class="page page-container oral-page app-shell">
+    <aside class="coach-sidebar side-column" aria-label="Navega&ccedil;&atilde;o do treino">
       <a class="brand-lockup" href="index.html" aria-label="Espanol Coach.app">
         <span class="brand-mark">EC</span>
         <span>Espanol Coach.app</span>
@@ -31,14 +31,15 @@
       </div>
     </aside>
 
-    <div class="coach-workspace">
+    <div class="coach-workspace main-column">
       <header class="app-header page-header">
         <div class="header-topline">
           <a class="back-link btn btn-ghost" href="index.html">Voltar ao treino principal</a>
           <span class="badge badge-status exam-mode-badge">&Aacute;rea de prova</span>
         </div>
-        <h1 class="app-title">Prova oral de espanhol</h1>
-        <p class="app-subtitle">Responda em voz alta, acompanhe o progresso e receba feedback pr&aacute;tico.</p>
+        <span class="eyebrow">Modo desafio oral</span>
+        <h1 class="app-title page-title">Prova oral de espanhol</h1>
+        <p class="app-subtitle page-subtitle">Responda em voz alta, acompanhe o progresso e receba feedback pr&aacute;tico.</p>
       </header>
 
       <section class="exam-config panel panel-muted" aria-label="Configura&ccedil;&atilde;o da prova oral">
@@ -51,19 +52,18 @@
         </div>
 
         <div class="config-grid control-grid">
-          <div>
-            <label for="examDifficulty">Dificuldade</label>
-            <select id="examDifficulty">
+          <div class="field">
+            <label class="field-label" for="examDifficulty">Dificuldade</label>
+            <select id="examDifficulty" class="select">
               <option value="basico">B&aacute;sico</option>
               <option value="intermediario">Intermedi&aacute;rio</option>
               <option value="avancado">Avan&ccedil;ado</option>
             </select>
           </div>
-          <div>
-            <label for="examTheme">Tema</label>
-            <select id="examTheme">
+          <div class="field">
+            <label class="field-label" for="examTheme">Tema</label>
+            <select id="examTheme" class="select">
               <option value="entrevista">Entrevista</option>
-              <option value="suporte">Suporte t&eacute;cnico</option>
               <option value="desenvolvimento">Desenvolvimento web</option>
               <option value="financeiro">Sistema financeiro</option>
               <option value="fintech">Fintech / pagamentos</option>
@@ -72,9 +72,9 @@
               <option value="misturado">Misturado</option>
             </select>
           </div>
-          <div>
-            <label for="examCount">Quantidade de perguntas</label>
-            <select id="examCount">
+          <div class="field">
+            <label class="field-label" for="examCount">Quantidade de perguntas</label>
+            <select id="examCount" class="select">
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -87,7 +87,7 @@
           <button id="startExamButton" class="btn btn-primary" type="button">Iniciar prova</button>
         </div>
 
-        <p class="notice notice-soft">A corre&ccedil;&atilde;o de pron&uacute;ncia &eacute; aproximada, baseada na transcri&ccedil;&atilde;o do navegador. Para an&aacute;lise fon&eacute;tica perfeita seria necess&aacute;rio usar uma API especializada.</p>
+        <p class="notice notice-soft">A prova usa transcri&ccedil;&atilde;o do navegador e, quando configurada na Netlify, tamb&eacute;m envia o &aacute;udio para uma an&aacute;lise fon&eacute;tica especializada.</p>
         <p id="supportWarning" class="message" role="status"></p>
       </section>
 
@@ -141,7 +141,7 @@
           <span class="step-badge">2</span>
           <div>
             <h2>Feedback</h2>
-            <p>Veja sua nota, vocabul&aacute;rio encontrado e sugest&otilde;es.</p>
+            <p>Veja sua nota, corre&ccedil;&atilde;o e sugest&otilde;es.</p>
           </div>
         </div>
         <div id="feedbackContent" class="feedback-content empty-state">Responda a pergunta para receber feedback.</div>

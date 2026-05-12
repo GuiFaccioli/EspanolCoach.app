@@ -7,7 +7,7 @@ export function isSpeechRecognitionSupported() {
 
 export function startRecognition(language = "es-MX", onResult, onError, onStart, onEnd) {
   if (!isSpeechRecognitionSupported()) {
-    onError?.("Seu navegador não suporta reconhecimento de voz. Tente usar o Google Chrome.");
+    onError?.("Seu navegador n\u00e3o suporta reconhecimento de voz. Tente usar o Google Chrome.");
     return;
   }
 
@@ -45,7 +45,7 @@ export function startRecognition(language = "es-MX", onResult, onError, onStart,
   try {
     recognition.start();
   } catch (error) {
-    onError?.("NÃ£o foi possÃ­vel iniciar o reconhecimento de voz. Tente novamente.");
+    onError?.("N\u00e3o foi poss\u00edvel iniciar o reconhecimento de voz. Tente novamente.");
   }
 }
 
@@ -66,7 +66,7 @@ export function normalizeText(text) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[¿?¡!.,;:()"]/g, " ")
+    .replace(/[\u00bf?\u00a1!.,;:()"]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }

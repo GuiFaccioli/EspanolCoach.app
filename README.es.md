@@ -1,42 +1,52 @@
 # Espanol Coach.app
 
-Entrenador de español técnico para contextos profesionales, entrevistas, tecnología y práctica por voz.
+Entrenador de espanol tecnico para contextos profesionales, entrevistas, tecnologia y practica por voz.
 
-[Português](README.md) | [English](README.en.md)
+[Portugues](README.md) | [English](README.en.md)
 
 ## Acerca del Proyecto
 
-Espanol Coach.app es una aplicación estática creada con HTML, CSS y JavaScript puro. Ayuda a practicar español en situaciones reales de trabajo, con foco en tecnología, soporte, desarrollo web, fintech, pagos, reuniones y entrevistas.
+Espanol Coach.app es una aplicacion estatica creada con HTML, CSS y JavaScript puro. Ayuda a practicar espanol en situaciones reales de trabajo, con foco en tecnologia, desarrollo web, fintech, pagos, reuniones y entrevistas.
 
-La aplicación combina generación de ejercicios, reproducción de voz desde el navegador, reconocimiento de voz, prueba oral y feedback práctico para apoyar la evolución del usuario.
+La aplicacion combina generacion de ejercicios, reproduccion de voz desde el navegador, reconocimiento de voz, prueba oral y feedback practico para apoyar la evolucion del usuario.
 
 ## Funcionalidades
 
 - Entrenamientos por dificultad, tema y cantidad de frases.
 - Modos de ejercicio para escuchar y repetir, traducir, completar espacios, responder preguntas y simular entrevistas.
 - Reproductor de audio con controles individuales y globales usando Web Speech API.
-- Selección de voz, velocidad de habla y volumen predeterminado.
-- Prueba oral con preguntas en español, traducción opcional, grabación por voz, transcripción y corrección aproximada.
-- Feedback con nota, vocabulario esperado, palabras encontradas, palabras ausentes y sugerencia de respuesta más natural.
+- Seleccion de voz, velocidad de habla y volumen predeterminado.
+- Prueba oral con preguntas en espanol, traduccion opcional, grabacion por voz, transcripcion y correccion neutral.
+- Feedback con nota, correccion del espanol, variaciones de respuesta y evaluacion fonetica especializada opcional via Azure Speech.
 - Interfaz dark mode con cards, badges, progreso visual y estilo de plataforma gamificada de entrenamiento.
-- Banco local de preguntas y modelos dividido en módulos JavaScript.
+- Banco local de preguntas y modelos dividido en modulos JavaScript.
 
-## Cómo Usar
+## Como Usar
 
 Abre el archivo `index.html` en el navegador.
 
-Para acceder a la prueba oral, usa el botón `Ir para prova oral` en la pantalla principal o abre `prova.html` directamente.
+Para acceder a la prueba oral, usa el boton `Ir para prova oral` en la pantalla principal o abre `prova.html` directamente.
 
 ## Deploy en Netlify
 
-Este proyecto es estático y no necesita una etapa de build.
+Este proyecto es estatico y no necesita una etapa de build.
 
-Configuración recomendada en Netlify:
+Configuracion recomendada en Netlify:
 
-- Build command: dejar vacío
+- Build command: dejar vacio
 - Publish directory: `.`
+- Functions directory: `netlify/functions`
 
-El archivo `netlify.toml` ya define esta configuración para deploy automático desde GitHub.
+El archivo `netlify.toml` ya define esta configuracion para deploy automatico desde GitHub.
+
+### Evaluacion fonetica especializada
+
+La prueba oral funciona sin APIs externas. Para activar la evaluacion fonetica basada en audio, configura estas variables de entorno en Netlify:
+
+- `AZURE_SPEECH_KEY`
+- `AZURE_SPEECH_REGION`
+
+Con estas variables, `netlify/functions/pronunciation-assessment.js` envia audio WAV PCM mono de 16 kHz a Azure Speech Pronunciation Assessment y devuelve notas de pronunciacion, precision, fluidez, completitud y palabras que necesitan mas atencion.
 
 ## Requisitos
 
@@ -54,6 +64,8 @@ El archivo `netlify.toml` ya define esta configuración para deploy automático 
 |-- css/
 |   |-- style.css
 |   `-- prova.css
+|-- netlify/
+|   `-- functions/
 `-- js/
     |-- main.js
     |-- prova.js
@@ -66,4 +78,4 @@ El archivo `netlify.toml` ya define esta configuración para deploy automático 
 
 ## Notas
 
-La corrección de la prueba oral es aproximada y se basa en la transcripción realizada por el navegador. Para una evaluación fonética más precisa, sería necesario integrar una API especializada de voz.
+Sin las variables de Azure, la app usa solo la correccion local basada en la transcripcion del navegador. Con Azure configurado, el feedback tambien incluye evaluacion fonetica especializada del audio grabado.

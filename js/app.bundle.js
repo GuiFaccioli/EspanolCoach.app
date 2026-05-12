@@ -10,7 +10,6 @@
     general: "Geral",
     entrevista: "Entrevista",
     reuniao: "Reunião",
-    suporte: "Suporte",
     desenvolvimento: "Web",
     financeiro: "Financeiro",
     fintech: "fintech / fintech",
@@ -26,7 +25,7 @@
       item(
         "Necesito ayuda con el sistema.",
         "Eu preciso de ajuda com o sistema.",
-        "suporte",
+
       ),
       item("Tengo una reunión hoy.", "Eu tenho uma reunião hoje.", "reuniao"),
       item(
@@ -52,9 +51,9 @@
         "desenvolvimento",
       ),
       item(
-        "Tengo experiencia con soporte técnico y atención a usuarios.",
-        "Tenho experiência com suporte técnico e atendimento a usuários.",
-        "suporte",
+        "Tengo experiencia con desarrollo web y proyectos de tecnologia.",
+        "Tenho experiencia com desenvolvimento web e projetos de tecnologia.",
+        "desenvolvimento",
       ),
       item(
         "Me gustaría trabajar en una empresa de tecnología financiera.",
@@ -64,7 +63,7 @@
       item(
         "Puedo analizar errores del sistema y explicar la solución con claridad.",
         "Posso analisar erros do sistema e explicar a solução com clareza.",
-        "suporte",
+
       ),
       item(
         "El cliente reportó un error al procesar una transacción.",
@@ -86,7 +85,7 @@
       item(
         "Tengo experiencia resolviendo problemas técnicos, comunicándome con usuarios y colaborando con equipos de desarrollo.",
         "Tenho experiência resolvendo problemas técnicos, comunicando-me com usuários e colaborando com equipes de desenvolvimento.",
-        "suporte",
+
       ),
       item(
         "Si una transacción falla, intento analizar el problema, revisar los datos y comunicar la situación con claridad.",
@@ -112,9 +111,9 @@
         "entrevista",
       ),
       item(
-        "¿Qué experiencia tienes con soporte técnico?",
-        "Que experiência você tem com suporte técnico?",
-        "suporte",
+        "Que experiencia tienes con desarrollo web?",
+        "Que experiencia voce tem com desenvolvimento web?",
+        "desenvolvimento",
       ),
       item(
         "¿Por qué te interesa el sector financiero?",
@@ -137,12 +136,12 @@
     item(
       "El usuario no puede iniciar sesión en el sistema.",
       "O usuário não consegue entrar no sistema.",
-      "suporte",
+
     ),
     item(
       "Voy a revisar los registros para entender el error.",
       "Vou revisar os registros para entender o erro.",
-      "suporte",
+
     ),
     item(
       "La transacción fue aprobada por el sistema.",
@@ -280,7 +279,7 @@
     var objects = [
       ["con APIs financieras", "com APIs financeiras", "desenvolvimento"],
       ["con sistemas de pago", "com sistemas de pagamento", "financeiro"],
-      ["con usuarios internos", "com usuários internos", "suporte"],
+
       ["en reuniones técnicas", "em reuniões técnicas", "reuniao"],
     ];
     var endings = [
@@ -456,11 +455,11 @@
       i +
       '"><div class="player-top"><div class="player-buttons"><button class="player-button play" type="button" data-action="play" data-index="' +
       i +
-      '">▶</button><button class="player-button" type="button" data-action="pause" data-index="' +
+      '">&#9654;</button><button class="player-button" type="button" data-action="pause" data-index="' +
       i +
-      '">Ⅱ</button><button class="player-button stop" type="button" data-action="stop" data-index="' +
+      '">&#10074;&#10074;</button><button class="player-button stop" type="button" data-action="stop" data-index="' +
       i +
-      '">■</button></div><span class="status" data-role="status">Parado</span></div><div class="progress-row"><div class="progress-container"><div class="progress-bar" data-role="progress"></div></div><span class="time-label" data-role="time">00:00 / ' +
+      '">&#9632;</button></div><span class="status" data-role="status">Parado</span></div><div class="progress-row"><div class="progress-container"><div class="progress-bar" data-role="progress"></div></div><span class="time-label" data-role="time">00:00 / ' +
       format(estimate(text)) +
       '</span></div><div class="player-bottom"><div class="volume-control"><label for="volume-' +
       i +

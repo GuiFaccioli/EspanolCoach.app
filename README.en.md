@@ -6,7 +6,7 @@ Technical Spanish trainer for professional contexts, interviews, technology topi
 
 ## About
 
-Espanol Coach.app is a static app built with plain HTML, CSS, and JavaScript. It helps users practice Spanish in real workplace situations, with a focus on technology, support, web development, fintech, payments, meetings, and interviews.
+Espanol Coach.app is a static app built with plain HTML, CSS, and JavaScript. It helps users practice Spanish in real workplace situations, with a focus on technology, web development, fintech, payments, meetings, and interviews.
 
 The app combines exercise generation, browser voice playback, speech recognition, an oral exam mode, and practical feedback to support steady progress.
 
@@ -16,8 +16,8 @@ The app combines exercise generation, browser voice playback, speech recognition
 - Exercise modes for listen and repeat, translation, gap completion, question answering, and interview simulation.
 - Audio player with individual and global controls using the Web Speech API.
 - Voice selection, speech speed, and default volume controls.
-- Oral exam with Spanish questions, optional translation, voice recording, transcription, and approximate correction.
-- Feedback with score, expected vocabulary, found words, missing words, and a more natural sample answer.
+- Oral exam with Spanish questions, optional translation, voice recording, transcription, and neutral correction.
+- Feedback with score, Spanish correction, response variations, and optional specialized phonetic assessment via Azure Speech.
 - Dark mode interface with cards, badges, visual progress, and a gamified training-platform feel.
 - Local question and template data split into JavaScript modules.
 
@@ -35,8 +35,18 @@ Recommended Netlify settings:
 
 - Build command: leave empty
 - Publish directory: `.`
+- Functions directory: `netlify/functions`
 
 The `netlify.toml` file already defines this configuration for automatic deploys from GitHub.
+
+### Specialized Phonetic Assessment
+
+The oral exam works without external APIs. To enable audio-based phonetic assessment, configure these environment variables in Netlify:
+
+- `AZURE_SPEECH_KEY`
+- `AZURE_SPEECH_REGION`
+
+With these variables, `netlify/functions/pronunciation-assessment.js` sends 16 kHz mono PCM WAV audio to Azure Speech Pronunciation Assessment and returns pronunciation, accuracy, fluency, completeness, and words that need more attention.
 
 ## Requirements
 
@@ -54,6 +64,8 @@ The `netlify.toml` file already defines this configuration for automatic deploys
 |-- css/
 |   |-- style.css
 |   `-- prova.css
+|-- netlify/
+|   `-- functions/
 `-- js/
     |-- main.js
     |-- prova.js
@@ -66,4 +78,4 @@ The `netlify.toml` file already defines this configuration for automatic deploys
 
 ## Notes
 
-The oral exam correction is approximate and based on the browser transcription. For more precise phonetic evaluation, a specialized speech API would be required.
+Without the Azure variables, the app uses only the local correction based on browser transcription. With Azure configured, the feedback also includes specialized phonetic assessment of the recorded audio.

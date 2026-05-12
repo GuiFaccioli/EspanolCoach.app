@@ -14,7 +14,6 @@ const commonErrors = [
   { wrong: "tecnologia", correct: "tecnología", message: "Treine a palavra 'tecnología' com tonicidade clara." },
   { wrong: "espanol", correct: "español", message: "Use 'español', com som de ñ." },
   { wrong: "aprendendo", correct: "aprendiendo", message: "Em espanhol, diga 'aprendiendo'." },
-  { wrong: "suporte", correct: "soporte", message: "Em espanhol, a palavra é 'soporte'." },
   { wrong: "tempo", correct: "tiempo", message: "Em espanhol, diga 'tiempo'." },
   { wrong: "muitos", correct: "muchos", message: "Em espanhol, use 'muchos'." },
   { wrong: "processos", correct: "procesos", message: "Em espanhol, use 'procesos'." },
@@ -99,7 +98,7 @@ export function generateFeedback(userTranscript, question) {
     correctedText,
     correctionNotes: buildCorrectionNotes(userTranscript, grammarIssues),
     grammarIssues,
-    answerVariations: buildAnswerVariations(correctedText || userTranscript, question),
+    answerVariations: generateResponseVariations(correctedText || userTranscript, question),
     tips: question.tips
   };
 }
@@ -161,7 +160,7 @@ function calculateSpanishSignal(text) {
     "yo", "me", "mi", "mis", "soy", "estoy", "tengo", "quiero", "puedo", "necesito",
     "para", "con", "en", "el", "la", "los", "las", "una", "un", "que", "porque",
     "reviso", "trabajo", "aprendo", "explico", "sistema", "usuario", "tecnologia",
-    "financiera", "financiero", "pagos", "soporte", "equipo"
+    "financiera", "financiero", "pagos", "equipo"
   ]);
   const matches = tokens.filter((token) => spanishMarkers.has(token)).length;
 
@@ -220,6 +219,232 @@ function buildAnswerVariations(text, question) {
   ];
 
   return variations;
+}
+
+function generateResponseVariations(text, question) {
+  const level = getDifficultyLabel(question.difficulty);
+  const directText = buildDirectAnswer(text, question);
+  const context = getVariationContext(question);
+  const groups = buildVariationCandidates(directText, question, context);
+
+  return ensureUniqueVariations(groups.map((group) => ({
+    type: group.type,
+    level,
+    text: ensureSpanishPunctuation(group.candidates[0]),
+    explanation: group.explanation,
+    audioText: ensureSpanishPunctuation(group.candidates[0])
+  }))).slice(0, 5);
+}
+
+function buildDirectAnswer(text, question) {
+  const cleaned = text.trim();
+
+  if (!cleaned || looksIncomplete(cleaned)) {
+    return question.sampleAnswerEs;
+  }
+
+  return ensureSpanishPunctuation(
+    capitalizeFirst(cleaned)
+      .replace(/^Yo trabajo\b/i, "Trabajo")
+      .replace(/^Yo estudio\b/i, "Estudio")
+      .replace(/^Yo quiero\b/i, "Quiero")
+  );
+}
+
+function buildVariationCandidates(directText, question, context) {
+  const difficulty = question.difficulty;
+  const sample = question.sampleAnswerEs;
+
+  return [
+    {
+      type: "Corrección directa",
+      explanation: "Mantém sua ideia original com correção gramatical.",
+      candidates: [directText, sample]
+    },
+    {
+      type: "Mais natural",
+      explanation: "Soa mais fluida e comum para um falante de espanhol.",
+      candidates: getNaturalCandidates(difficulty, context, sample)
+    },
+    {
+      type: "Mais profissional",
+      explanation: "Adapta a resposta para entrevistas, trabalho e tecnologia.",
+      candidates: getProfessionalCandidates(difficulty, context, sample)
+    },
+    {
+      type: "Mais completa",
+      explanation: "Expande a resposta com mais contexto para prática oral.",
+      candidates: getCompleteCandidates(difficulty, context, sample)
+    },
+    {
+      type: "Mais avançada",
+      explanation: "Usa uma estrutura mais sofisticada para o seu nível.",
+      candidates: getAdvancedCandidates(difficulty, context, sample)
+    }
+  ];
+}
+
+function getNaturalCandidates(difficulty, context, sample) {
+  if (difficulty === "basico") {
+    return [
+      `Trabajo en el área de ${context.area}.`,
+      `Estudio ${context.skill} y practico español profesional.`,
+      sample
+    ];
+  }
+
+  if (difficulty === "intermediario") {
+    return [
+      `Trabajo con ${context.area} y también estoy aprendiendo ${context.skill}.`,
+      `Me interesa ${context.area} porque quiero mejorar mi perfil profesional.`,
+      sample
+    ];
+  }
+
+  return [
+    `Me desempeño en el área de ${context.area}, combinando práctica técnica y comunicación profesional.`,
+    `Actualmente desarrollo mis habilidades en ${context.skill}, especialmente en contextos profesionales.`,
+    sample
+  ];
+}
+
+function getProfessionalCandidates(difficulty, context, sample) {
+  if (difficulty === "basico") {
+    return [
+      `Trabajo en una empresa de ${context.area}.`,
+      `Quiero aprender más sobre ${context.area}.`,
+      sample
+    ];
+  }
+
+  if (difficulty === "intermediario") {
+    return [
+      `En mi trabajo, uso ${context.area} para resolver problemas y apoyar al equipo.`,
+      `Estoy desarrollando experiencia en ${context.area} para crecer profesionalmente.`,
+      sample
+    ];
+  }
+
+  return [
+    `En mi experiencia, he trabajado con ${context.area} resolviendo problemas, analizando errores y colaborando con equipos técnicos.`,
+    `Actualmente aplico conocimientos de ${context.area} para comunicar soluciones de forma clara y profesional.`,
+    sample
+  ];
+}
+
+function getCompleteCandidates(difficulty, context, sample) {
+  if (difficulty === "basico") {
+    return [
+      `Trabajo con ${context.area} y estudio ${context.skill}.`,
+      `Quiero mejorar mi español para hablar sobre ${context.area}.`,
+      sample
+    ];
+  }
+
+  if (difficulty === "intermediario") {
+    return [
+      `Trabajo con ${context.area} y estoy aprendiendo ${context.skill} para mejorar mi perfil profesional.`,
+      `Tengo interés en ${context.area} porque combina aprendizaje técnico, comunicación y práctica real.`,
+      sample
+    ];
+  }
+
+  return [
+    `Trabajo con ${context.area} y he desarrollado experiencia resolviendo problemas, analizando errores y apoyando a usuarios en situaciones reales.`,
+    `Mi objetivo es fortalecer mi comunicación profesional en español mientras sigo creciendo en ${context.skill}.`,
+    sample
+  ];
+}
+
+function getAdvancedCandidates(difficulty, context, sample) {
+  if (difficulty === "basico") {
+    return [
+      `Trabajo con ${context.area} y quiero mejorar mis habilidades profesionales.`,
+      `Estudio ${context.skill} para tener más oportunidades.`,
+      sample
+    ];
+  }
+
+  if (difficulty === "intermediario") {
+    return [
+      `Además de trabajar con ${context.area}, quiero comunicar mejor mis ideas en un ambiente profesional.`,
+      `Estoy ampliando mis conocimientos en ${context.skill} para participar mejor en reuniones y entrevistas.`,
+      sample
+    ];
+  }
+
+  return [
+    `Mi experiencia en ${context.area} me ha permitido combinar análisis técnico, comunicación con usuarios y aprendizaje continuo en ${context.skill}.`,
+    `Busco consolidar un perfil técnico capaz de explicar problemas, proponer soluciones y colaborar con equipos en español.`,
+    sample
+  ];
+}
+
+function getVariationContext(question) {
+  const contexts = {
+    entrevista: { area: "tecnología", skill: "entrevistas técnicas" },
+    desenvolvimento: { area: "desarrollo web", skill: "JavaScript, APIs y proyectos prácticos" },
+    financeiro: { area: "sistemas financieros", skill: "pagos, transacciones y análisis de errores" },
+    fintech: { area: "tecnología financiera", skill: "pagos digitales y productos fintech" },
+    reuniao: { area: "reuniones profesionales", skill: "comunicación clara con equipos" },
+    comunicacao: { area: "comunicación profesional", skill: "explicación de ideas técnicas" }
+  };
+
+  return contexts[question.theme] || { area: "tecnología", skill: "desarrollo profesional" };
+}
+
+function ensureUniqueVariations(variations) {
+  const unique = [];
+
+  variations.forEach((variation) => {
+    if (!isTooSimilarToAny(variation.text, unique.map((item) => item.text))) {
+      unique.push(variation);
+      return;
+    }
+
+    const text = makeFallbackVariation(variation, unique.length);
+    unique.push({ ...variation, text, audioText: text });
+  });
+
+  return unique;
+}
+
+function isTooSimilarToAny(text, previousTexts) {
+  return previousTexts.some((previous) => getSimilarityScore(text, previous) > 0.8);
+}
+
+function getSimilarityScore(firstText, secondText) {
+  const first = new Set(getMeaningfulTokens(firstText, 1));
+  const second = new Set(getMeaningfulTokens(secondText, 1));
+
+  if (!first.size || !second.size) {
+    return 0;
+  }
+
+  const shared = [...first].filter((word) => second.has(word)).length;
+  return shared / Math.min(first.size, second.size);
+}
+
+function makeFallbackVariation(variation, index) {
+  const prefixes = [
+    "De forma simple, ",
+    "En un contexto profesional, ",
+    "Con más detalle, ",
+    "Para una entrevista, ",
+    "Con un tono más avanzado, "
+  ];
+
+  return `${prefixes[index] || "También, "}${lowercaseFirst(variation.text)}`;
+}
+
+function getDifficultyLabel(difficulty) {
+  const labels = {
+    basico: "Básico",
+    intermediario: "Intermediário",
+    avancado: "Avançado"
+  };
+
+  return labels[difficulty] || "Treino";
 }
 
 function applySimpleCorrections(text, issues) {

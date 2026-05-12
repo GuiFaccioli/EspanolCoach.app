@@ -7,10 +7,11 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main class="page app-shell">
+  <main class="page page-container app-shell">
     <header class="page-header">
-      <h1 class="app-title">Espanol Coach.app</h1>
-      <p class="app-subtitle">Treine espanhol t&eacute;cnico com foco em tecnologia, entrevistas, suporte e conversa profissional.</p>
+      <span class="eyebrow">Treino de espanhol t&eacute;cnico</span>
+      <h1 class="app-title page-title">Espanol Coach.app</h1>
+      <p class="app-subtitle page-subtitle">Treine espanhol t&eacute;cnico com foco em tecnologia, entrevistas, fintech e conversa profissional.</p>
     </header>
 
     <section class="config-panel panel panel-primary" aria-label="Configura&ccedil;&atilde;o do treino">
@@ -23,22 +24,21 @@
       </div>
 
       <div class="config-grid control-grid">
-        <div>
-          <label for="difficultySelect">Dificuldade</label>
-          <select id="difficultySelect">
+        <div class="field">
+          <label class="field-label" for="difficultySelect">Dificuldade</label>
+          <select id="difficultySelect" class="select">
             <option value="basico">B&aacute;sico</option>
             <option value="intermediario">Intermedi&aacute;rio</option>
             <option value="avancado">Avan&ccedil;ado</option>
           </select>
         </div>
 
-        <div>
-          <label for="themeSelect">Tipo de treino</label>
-          <select id="themeSelect">
+        <div class="field">
+          <label class="field-label" for="themeSelect">Tipo de treino</label>
+          <select id="themeSelect" class="select">
             <option value="general">Frases gerais</option>
             <option value="entrevista">Entrevista</option>
             <option value="reuniao">Reuni&atilde;o</option>
-            <option value="suporte">Suporte t&eacute;cnico</option>
             <option value="desenvolvimento">Desenvolvimento web</option>
             <option value="financeiro">Sistema financeiro</option>
             <option value="fintech">Fintech / pagamentos</option>
@@ -46,9 +46,9 @@
           </select>
         </div>
 
-        <div>
-          <label for="modeSelect">Modo do exerc&iacute;cio</label>
-          <select id="modeSelect">
+        <div class="field">
+          <label class="field-label" for="modeSelect">Modo do exerc&iacute;cio</label>
+          <select id="modeSelect" class="select">
             <option value="repeat">Ouvir e repetir</option>
             <option value="translate-pt">Traduzir para portugu&ecirc;s</option>
             <option value="translate-es">Traduzir para espanhol</option>
@@ -58,9 +58,9 @@
           </select>
         </div>
 
-        <div>
-          <label for="countSelect">Quantidade de frases</label>
-          <select id="countSelect">
+        <div class="field">
+          <label class="field-label" for="countSelect">Quantidade de frases</label>
+          <select id="countSelect" class="select">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>
@@ -71,24 +71,24 @@
       </div>
 
       <div class="voice-grid">
-        <div>
-          <label for="voiceSelect">Voz</label>
-          <select id="voiceSelect">
+        <div class="field">
+          <label class="field-label" for="voiceSelect">Voz</label>
+          <select id="voiceSelect" class="select">
             <option value="">Carregando vozes...</option>
           </select>
         </div>
 
-        <div>
-          <label for="rateRange">Velocidade da fala</label>
-          <div class="range-line">
+        <div class="field">
+          <label class="field-label" for="rateRange">Velocidade da fala</label>
+          <div class="range-line range-control">
             <input id="rateRange" type="range" min="0.5" max="1.2" value="0.85" step="0.05">
             <span id="rateValue" class="pill-value">0.85</span>
           </div>
         </div>
 
-        <div>
-          <label for="defaultVolume">Volume padr&atilde;o</label>
-          <div class="range-line">
+        <div class="field">
+          <label class="field-label" for="defaultVolume">Volume padr&atilde;o</label>
+          <div class="range-line range-control">
             <input id="defaultVolume" type="range" min="0" max="1" value="1" step="0.1">
             <span id="volumeValue" class="pill-value">1.0</span>
           </div>
@@ -101,7 +101,7 @@
         <button id="stopAllButton" class="btn btn-danger" type="button">Parar tudo</button>
       </div>
 
-      <a class="oral-cta" href="prova.html" aria-label="Ir para prova oral">
+      <a class="oral-cta btn-oral-cta" href="prova.html" aria-label="Ir para prova oral">
         <span class="oral-cta-icon" aria-hidden="true">&#127897;</span>
         <span>
           <strong class="oral-cta-title">Ir para prova oral</strong>
@@ -114,7 +114,7 @@
 
     <div id="message" class="message" role="status" aria-live="polite"></div>
 
-    <section aria-labelledby="trainingTitle" class="training-section panel-muted">
+    <section aria-labelledby="trainingTitle" class="training-section panel panel-secondary">
       <div class="section-heading">
         <h2 id="trainingTitle">Treino gerado</h2>
         <p id="trainingCount" class="hint">Clique em Gerar novo treino para come&ccedil;ar.</p>
@@ -151,7 +151,7 @@
       </div>
     </section>
 
-    <section id="historyPanel" class="history-panel panel" aria-labelledby="historyTitle">
+    <section id="historyPanel" class="history-panel panel panel-muted" aria-labelledby="historyTitle">
       <div class="section-heading">
         <h2 id="historyTitle">&Uacute;ltimos treinos gerados</h2>
         <p class="hint">Clique em um treino para carregar novamente.</p>

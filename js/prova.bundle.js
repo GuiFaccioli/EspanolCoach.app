@@ -4,132 +4,9 @@
   if (window.__spanishOralExamModuleLoaded) return;
 
   var questions = [
-    q(
-      "b1",
-      "basico",
-      "entrevista",
-      "¿Cómo te llamas?",
-      "Como você se chama?",
-      ["me", "llamo", "soy"],
-      "Me llamo Gabriel y soy brasileño.",
-    ),
-    q(
-      "b2",
-      "basico",
-      "suporte",
-      "¿Tienes experiencia con soporte técnico?",
-      "Você tem experiência com suporte técnico?",
-      ["tengo", "experiencia", "soporte"],
-      "Tengo experiencia con soporte técnico y atención a usuarios.",
-    ),
-    q(
-      "b3",
-      "basico",
-      "desenvolvimento",
-      "¿Qué tecnologías estás aprendiendo?",
-      "Quais tecnologias você está aprendendo?",
-      ["html", "css", "javascript"],
-      "Estoy aprendiendo HTML, CSS y JavaScript.",
-    ),
-    q(
-      "b4",
-      "basico",
-      "financeiro",
-      "¿Qué es una transacción?",
-      "O que é uma transação?",
-      ["transacción", "pago", "sistema"],
-      "Una transacción es una operación de pago en el sistema.",
-    ),
-    q(
-      "b5",
-      "basico",
-      "fintech",
-      "¿Qué sabes sobre fintech?",
-      "O que você sabe sobre a fintech?",
-      ["fintech", "tecnología", "financiera"],
-      "fintech es una empresa de tecnología financiera.",
-    ),
-    q(
-      "i1",
-      "intermediario",
-      "entrevista",
-      "Cuéntame sobre tu experiencia con tecnología.",
-      "Conte-me sobre sua experiência com tecnologia.",
-      ["experiencia", "tecnología", "soporte"],
-      "Tengo experiencia con soporte técnico, usuarios y sistemas.",
-    ),
-    q(
-      "i2",
-      "intermediario",
-      "suporte",
-      "¿Cómo explicas un problema técnico a un usuario?",
-      "Como você explica um problema técnico a um usuário?",
-      ["explico", "problema", "usuario"],
-      "Explico el problema con claridad y uso palabras simples.",
-    ),
-    q(
-      "i3",
-      "intermediario",
-      "desenvolvimento",
-      "¿Qué haces si una API devuelve un error?",
-      "O que você faz se uma API retorna um erro?",
-      ["api", "error", "respuesta"],
-      "Reviso la solicitud, la respuesta y los registros del sistema.",
-    ),
-    q(
-      "i4",
-      "intermediario",
-      "financeiro",
-      "¿Cómo revisarías una transacción rechazada?",
-      "Como você revisaria uma transação recusada?",
-      ["revisaría", "transacción", "datos"],
-      "Revisaría los datos, el estado del pago y el mensaje del sistema.",
-    ),
-    q(
-      "i5",
-      "intermediario",
-      "fintech",
-      "¿Qué esperas aprender en una fintech?",
-      "O que você espera aprender em uma fintech?",
-      ["aprender", "pagos", "tecnología"],
-      "Espero aprender sobre pagos, tarjetas y tecnología financiera.",
-    ),
-    q(
-      "a1",
-      "avancado",
-      "financeiro",
-      "¿Cómo resolverías un problema en una transacción fallida?",
-      "Como você resolveria um problema em uma transação com falha?",
-      ["resolvería", "transacción", "datos", "sistema"],
-      "Analizaría los datos, revisaría los registros del sistema y comunicaría el impacto.",
-    ),
-    q(
-      "a2",
-      "avancado",
-      "desenvolvimento",
-      "¿Cómo comunicarías un error técnico a un equipo de desarrollo?",
-      "Como você comunicaria um erro técnico a uma equipe de desenvolvimento?",
-      ["comunicaría", "error", "equipo"],
-      "Comunicaría el error con evidencias, pasos para reproducirlo y prioridad.",
-    ),
-    q(
-      "a3",
-      "avancado",
-      "fintech",
-      "¿Por qué te interesa el sector financiero y empresas como fintech?",
-      "Por que você se interessa pelo setor financeiro e empresas como a fintech?",
-      ["interesa", "sector", "fintech", "pagos"],
-      "Me interesa porque combina tecnología, pagos, seguridad e impacto real.",
-    ),
-    q(
-      "a4",
-      "avancado",
-      "suporte",
-      "¿Cómo transformarías tu experiencia en soporte técnico en valor para un equipo de tecnología?",
-      "Como você transformaria sua experiência em suporte técnico em valor para uma equipe de tecnologia?",
-      ["soporte", "valor", "usuarios"],
-      "Aportaría valor entendiendo usuarios, documentando problemas y colaborando con desarrollo.",
-    ),
+
+
+
     q(
       "a5",
       "avancado",
@@ -142,7 +19,6 @@
   ];
   var labels = {
     entrevista: "Entrevista",
-    suporte: "Suporte técnico",
     desenvolvimento: "Desenvolvimento web",
     financeiro: "Sistema financeiro",
     fintech: "Fintech / fintech",
@@ -155,6 +31,7 @@
   var recognition = null;
   var partial = "";
   var finalText = "";
+  var activeVariation = null;
 
   function q(
     id,
@@ -226,6 +103,7 @@
   }
 
   function nextQuestion() {
+    stopVariationAudio();
     exam.index += 1;
     if (exam.index >= exam.list.length) return finish();
     var item = exam.list[exam.index];
@@ -251,7 +129,7 @@
   function speak() {
     var item = exam.list[exam.index];
     if (!item || !("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
+    stopVariationAudio();
     var u = new SpeechSynthesisUtterance(item.questionEs);
     var voices = speechSynthesis.getVoices();
     var voice = voices.find(function (v) {
@@ -316,14 +194,22 @@
       feedback: feedback,
     };
     exam.answers[exam.index] = result;
+    var scoreColor = getScoreColor(score);
+    var scorePercent = getScorePercent(score);
     els.feedback.className = "feedback-content";
     els.feedback.innerHTML =
-      '<div class="feedback-grid"><div class="feedback-block"><h3>Sua transcrição</h3><p>' +
+      '<div class="score-card dynamic-score" style="--score-color: ' +
+      scoreColor +
+      "; --score-percent: " +
+      scorePercent +
+      '%;"><span class="score-label">Nota geral da resposta</span><strong class="score-value">' +
+      formatScore(score) +
+      '/10</strong><div class="score-bar" aria-hidden="true"><div class="score-bar-fill"></div></div><p class="score-meta">Avaliação geral da clareza, estrutura, naturalidade e correção da resposta.</p></div><div class="feedback-grid"><div class="feedback-block"><h3>Sua transcrição</h3><p>' +
       esc(text) +
       '</p></div><div class="feedback-block"><h3>Correção do espanhol</h3><p>' +
       esc(feedback.correction) +
-      '</p></div><div class="feedback-block"><h3>5 variações possíveis para essa resposta</h3>' +
-      renderVariations(feedback.variations) +
+      '</p></div><div class="feedback-block variation-section"><h3>5 variações possíveis para essa resposta</h3>' +
+      renderVariationCards(feedback.variations) +
       '</div></div>';
     els.next.disabled = false;
   }
@@ -366,6 +252,7 @@
     els.record.addEventListener("click", startRec);
     els.stop.addEventListener("click", stopRec);
     els.next.addEventListener("click", nextQuestion);
+    els.feedback.addEventListener("click", handleFeedbackClick);
     els.toggle.addEventListener("click", function () {
       var show = els.translation.classList.toggle("show");
       els.toggle.textContent = show ? "Esconder tradução" : "Mostrar tradução";
@@ -375,6 +262,55 @@
   function supported() {
     return Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
   }
+
+  function handleFeedbackClick(event) {
+    var button = event.target.closest("[data-variation-index]");
+    if (!button) return;
+    var answer = exam.answers[exam.index];
+    if (!answer || !answer.feedback || !answer.feedback.variations) return;
+    var variation = normalizeVariation(answer.feedback.variations[Number(button.dataset.variationIndex)]);
+    speakVariation(variation, button);
+  }
+
+  function speakVariation(variation, button) {
+    if (!variation.audioText || !("speechSynthesis" in window)) return;
+    stopVariationAudio();
+    var card = button.closest(".variation-card");
+    var duration = estimateSpeechDuration(variation.audioText);
+    activeVariation = { card: card, button: button };
+    var u = new SpeechSynthesisUtterance(variation.audioText);
+    var voices = speechSynthesis.getVoices();
+    var voice = voices.find(function (v) { return /^es/.test(v.lang); });
+    u.lang = voice ? voice.lang : "es-MX";
+    if (voice) u.voice = voice;
+    u.rate = 0.88;
+    u.onstart = function () {
+      if (card) {
+        card.style.setProperty("--variation-duration", duration + "s");
+        card.classList.add("is-playing");
+      }
+      button.classList.add("is-playing");
+      var icon = button.querySelector(".play-icon");
+      if (icon) icon.textContent = "\u25a0";
+    };
+    u.onend = function () { stopVariationAudio(false); };
+    u.onerror = function () { stopVariationAudio(false); };
+    speechSynthesis.speak(u);
+  }
+
+  function stopVariationAudio(cancelSpeech) {
+    if (cancelSpeech !== false && "speechSynthesis" in window) speechSynthesis.cancel();
+    if (activeVariation) {
+      if (activeVariation.card) activeVariation.card.classList.remove("is-playing");
+      if (activeVariation.button) {
+        activeVariation.button.classList.remove("is-playing");
+        var icon = activeVariation.button.querySelector(".play-icon");
+        if (icon) icon.textContent = "\u25b6";
+      }
+    }
+    activeVariation = null;
+  }
+
   function updateProgress(current, total) {
     var percent = total > 0 ? Math.round((current / total) * 100) : 0;
     if (els.progressBar) els.progressBar.style.width = percent + "%";
@@ -417,7 +353,7 @@
     return {
       issues: issues,
       correction: correctionText(text, issues),
-      variations: answerVariations(corrected || text, item),
+      variations: variationObjects(corrected || text, item),
     };
   }
   function scoreOpenAnswer(text, item, issues) {
@@ -435,7 +371,6 @@
       { wrong: "jo", correct: "yo", message: "Use 'yo', não 'jo'." },
       { wrong: "com", correct: "con", message: "O navegador entendeu 'com'. Em espanhol, use 'con'." },
       { wrong: "aprendendo", correct: "aprendiendo", message: "Em espanhol, diga 'aprendiendo'." },
-      { wrong: "suporte", correct: "soporte", message: "Em espanhol, a palavra é 'soporte'." },
       { wrong: "tempo", correct: "tiempo", message: "Em espanhol, diga 'tiempo'." },
       { wrong: "processos", correct: "procesos", message: "Em espanhol, use 'procesos'." },
       { wrong: "sistema fina", correct: "sistema financiero", message: "A expressão 'sistema fina' ficou incompleta. O mais natural é 'sistema financiero'." },
@@ -461,7 +396,7 @@
       "yo", "me", "mi", "soy", "estoy", "tengo", "quiero", "puedo", "necesito",
       "para", "con", "en", "el", "la", "los", "las", "que", "porque",
       "trabajo", "reviso", "explico", "sistema", "usuario", "tecnologia",
-      "financiera", "financiero", "pagos", "soporte", "equipo",
+      "financiera", "financiero", "pagos", "desarrollo", "equipo",
     ];
     var matches = tokens.filter(function (token) {
       return markers.indexOf(token) >= 0;
@@ -489,6 +424,58 @@
     if (tokensOf(text, 1).length < 6) notes.push("A resposta está curta. Para soar mais natural, tente formar uma frase completa com contexto.");
     return notes.length ? notes.join(" ") : "A frase está compreensível. O próximo passo é deixá-la mais natural e específica.";
   }
+  function variationObjects(text, item) {
+    var cleaned = String(text || "").trim();
+    var direct = cleaned && !looksIncomplete(cleaned) ? punctuate(capitalize(cleaned)).replace(/^Yo trabajo\b/i, "Trabajo") : item.sampleAnswerEs;
+    var ctx = contextFor(item.theme);
+    var level = item.difficulty === "basico" ? "Básico" : item.difficulty === "intermediario" ? "Intermediário" : "Avançado";
+    var advanced = item.difficulty === "avancado";
+    var mid = item.difficulty === "intermediario";
+    return uniqueVariationObjects([
+      makeVariation("Corrección directa", level, direct, "Mantém sua ideia original com correção gramatical."),
+      makeVariation("Mais natural", level, mid || advanced ? "Trabajo con " + ctx.area + " y también estoy aprendiendo " + ctx.skill + "." : "Trabajo en el área de " + ctx.area + ".", "Soa mais fluida e comum para um falante de espanhol."),
+      makeVariation("Mais profissional", level, advanced ? "En mi experiencia, he trabajado con " + ctx.area + " resolviendo problemas, analizando errores y colaborando con equipos técnicos." : "En mi trabajo, uso " + ctx.area + " para resolver problemas y apoyar al equipo.", "Adapta a resposta para entrevistas, trabalho e tecnologia."),
+      makeVariation("Mais completa", level, advanced ? "Trabajo con " + ctx.area + " y he desarrollado experiencia resolviendo problemas, analizando errores y apoyando a usuarios en situaciones reales." : "Trabajo con " + ctx.area + " y estoy aprendiendo " + ctx.skill + " para mejorar mi perfil profesional.", "Expande a resposta com mais contexto para prática oral."),
+      makeVariation("Mais avançada", level, advanced ? "Mi experiencia en " + ctx.area + " me ha permitido combinar análisis técnico, comunicación con usuarios y aprendizaje continuo en " + ctx.skill + "." : "Además de trabajar con " + ctx.area + ", quiero comunicar mejor mis ideas en un ambiente profesional.", "Usa uma estrutura mais sofisticada para o seu nível."),
+    ]);
+  }
+
+  function makeVariation(type, level, text, explanation) {
+    var audioText = punctuate(text);
+    return { type: type, level: level, text: audioText, explanation: explanation, audioText: audioText };
+  }
+
+  function contextFor(theme) {
+    var contexts = {
+      entrevista: { area: "tecnología", skill: "entrevistas técnicas" },
+      desenvolvimento: { area: "desarrollo web", skill: "JavaScript, APIs y proyectos prácticos" },
+      financeiro: { area: "sistemas financieros", skill: "pagos, transacciones y análisis de errores" },
+      fintech: { area: "tecnología financiera", skill: "pagos digitales y productos fintech" },
+      reuniao: { area: "reuniones profesionales", skill: "comunicación clara con equipos" },
+      comunicacao: { area: "comunicación profesional", skill: "explicación de ideas técnicas" },
+    };
+    return contexts[theme] || { area: "tecnología", skill: "desarrollo profesional" };
+  }
+
+  function uniqueVariationObjects(items) {
+    var unique = [];
+    items.forEach(function (item) {
+      if (unique.some(function (previous) { return variationSimilarity(previous.text, item.text) > 0.8; })) {
+        item.text = "En un contexto profesional, " + lowercase(item.text);
+        item.audioText = item.text;
+      }
+      unique.push(item);
+    });
+    return unique;
+  }
+
+  function variationSimilarity(a, b) {
+    var aw = tokensOf(a, 1);
+    var bw = tokensOf(b, 1);
+    var shared = aw.filter(function (word) { return bw.indexOf(word) >= 0; }).length;
+    return Math.min(aw.length, bw.length) ? shared / Math.min(aw.length, bw.length) : 0;
+  }
+
   function answerVariations(text, item) {
     var cleaned = String(text || "").trim();
     var base = cleaned && !looksIncomplete(cleaned) ? punctuate(capitalize(cleaned)) : item.sampleAnswerEs;
@@ -530,6 +517,77 @@
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
   }
+  function getScoreColor(score) {
+    var normalized = Math.max(0, Math.min(10, Number(score) || 0)) / 10;
+    var hue = Math.round(normalized * 120);
+    return "hsl(" + hue + ", 75%, 60%)";
+  }
+  function getScorePercent(score) {
+    return Math.round(Math.max(0, Math.min(10, Number(score) || 0)) * 10);
+  }
+  function formatScore(score) {
+    return Number.isInteger(score) ? score : Number(score).toFixed(1);
+  }
+
+  function renderVariationCards(variations) {
+    if (!variations || !variations.length) return "<p>Nenhuma variação disponível.</p>";
+    return '<div class="variation-list">' + variations.map(renderVariationCard).join("") + "</div>";
+  }
+
+  function renderVariationCard(variation, index) {
+    var item = normalizeVariation(variation);
+    var duration = estimateSpeechDuration(item.audioText);
+    var bars = "";
+    for (var i = 0; i < 14; i += 1) {
+      bars += '<span class="wave-bar" style="--bar-index: ' + i + ';"></span>';
+    }
+    return '<article class="variation-card" style="--variation-duration: ' + duration + 's;"><div class="variation-header"><span class="variation-type">' +
+      esc(item.type) +
+      '</span><span class="variation-level">' +
+      esc(item.level) +
+      '</span></div><p class="variation-text">' +
+      esc(item.text) +
+      '</p><p class="variation-explanation">' +
+      esc(item.explanation) +
+      '</p><div class="variation-audio-row"><button class="variation-play-btn" type="button" data-variation-index="' +
+      index +
+      '" aria-label="Ouvir variação ' +
+      (index + 1) +
+      '"><span class="play-icon">\u25b6</span></button><div class="variation-waveform" aria-hidden="true">' +
+      bars +
+      '</div><span class="variation-duration">' +
+      formatDuration(duration) +
+      "</span></div></article>";
+  }
+
+  function normalizeVariation(variation) {
+    if (typeof variation === "string") {
+      return {
+        type: "Variação",
+        level: "Treino",
+        text: variation,
+        explanation: "Frase alternativa para repetir em voz alta.",
+        audioText: variation,
+      };
+    }
+    return {
+      type: variation.type || "Variação",
+      level: variation.level || "Treino",
+      text: variation.text || "",
+      explanation: variation.explanation || "Frase alternativa para repetir em voz alta.",
+      audioText: variation.audioText || variation.text || "",
+    };
+  }
+
+  function estimateSpeechDuration(text) {
+    var words = String(text || "").trim().split(/\s+/).filter(Boolean).length;
+    return Math.max(2, Math.round((words / 2.5) * 10) / 10);
+  }
+
+  function formatDuration(seconds) {
+    return "0:" + String(Math.max(1, Math.round(seconds))).padStart(2, "0");
+  }
+
   function renderVariations(variations) {
     if (!variations || !variations.length) return "<p>Nenhuma variação disponível.</p>";
     return '<ol class="variation-list">' + variations.map(function (variation) {
