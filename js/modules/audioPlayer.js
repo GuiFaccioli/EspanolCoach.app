@@ -19,7 +19,7 @@ let onVoiceLoaded = () => {};
 let availableVoices = [];
 let activePlayer = null;
 let activeUtterance = null;
-let progressTimer = null;
+let progressFrame = null;
 let progressStartedAt = 0;
 let progressElapsedBeforePause = 0;
 let activeDuration = 0;
@@ -164,7 +164,7 @@ export function pauseAudio() {
   }
 
   progressElapsedBeforePause = getCurrentSegmentElapsed();
-  clearInterval(progressTimer);
+  cancelProgressFrame();
   window.speechSynthesis.pause();
 
   if (activePlayer.type === "phrase") {
@@ -191,8 +191,7 @@ export function resumeAudio() {
 
 export function stopAudio(markStopped = true) {
   playbackToken += 1;
-  clearInterval(progressTimer);
-  progressTimer = null;
+  cancelProgressFrame();
 
   if (isSpeechSupported()) {
     window.speechSynthesis.cancel();
@@ -303,10 +302,17 @@ export function resetPlayers() {
 }
 
 function startProgress() {
-  clearInterval(progressTimer);
+  cancelProgressFrame();
   progressStartedAt = Date.now();
-  progressTimer = setInterval(updateProgress, 120);
-  updateProgress();
+  const tick = () => {
+    updateProgress();
+
+    if (activePlayer && !window.speechSynthesis.paused) {
+      progressFrame = window.requestAnimationFrame(tick);
+    }
+  };
+
+  progressFrame = window.requestAnimationFrame(tick);
 }
 
 function getCurrentElapsed() {
@@ -319,7 +325,7 @@ function getCurrentSegmentElapsed() {
 }
 
 function finishPhrase(index) {
-  clearInterval(progressTimer);
+  cancelProgressFrame();
   setPhraseProgress(index, activeDuration, activeDuration);
   updatePlayerStatus(index, "Finalizado", getItems());
   activeUtterance = null;
@@ -329,7 +335,7 @@ function finishPhrase(index) {
 }
 
 function finishGlobal() {
-  clearInterval(progressTimer);
+  cancelProgressFrame();
   updateGlobalPlayer("Finalizado", getGlobalDuration(), getGlobalDuration());
   audioElements.globalCurrentPhrase.textContent = "Todas as frases foram reproduzidas.";
   activeUtterance = null;
@@ -352,4 +358,11 @@ function getCompletedGlobalDuration() {
   return getItems()
     .slice(0, globalQueueIndex)
     .reduce((total, item) => total + estimateDuration(item.es, getRate()), 0);
+}
+
+function cancelProgressFrame() {
+  if (progressFrame) {
+    window.cancelAnimationFrame(progressFrame);
+    progressFrame = null;
+  }
 }

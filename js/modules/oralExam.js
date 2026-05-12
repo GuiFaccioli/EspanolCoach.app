@@ -77,33 +77,33 @@ export function calculateKeywordScore(userTranscript, expectedKeywords) {
     return 1;
   }
 
-  const normalized = normalizeText(userTranscript);
-  const found = expectedKeywords.filter((keyword) => normalized.includes(normalizeText(keyword)));
+  const found = expectedKeywords.filter((keyword) => containsNormalizedTerm(userTranscript, keyword));
   return found.length / expectedKeywords.length;
 }
 
 export function calculateSimilarityScore(userTranscript, sampleAnswerEs) {
-  const userWords = new Set(normalizeText(userTranscript).split(" ").filter(Boolean));
-  const sampleWords = normalizeText(sampleAnswerEs).split(" ").filter((word) => word.length > 3);
+  const userWords = new Set(getMeaningfulTokens(userTranscript));
+  const sampleWords = getMeaningfulTokens(sampleAnswerEs);
 
   if (!sampleWords.length) {
     return 0;
   }
 
-  const matches = sampleWords.filter((word) => userWords.has(word));
-  return matches.length / sampleWords.length;
+  const sampleSet = new Set(sampleWords);
+  const matches = sampleWords.filter((word) => userWords.has(word)).length;
+  const denominator = userWords.size + sampleSet.size;
+  return denominator ? (2 * matches) / denominator : 0;
 }
 
 export function detectMissingKeywords(userTranscript, expectedKeywords) {
-  const normalized = normalizeText(userTranscript);
-  return expectedKeywords.filter((keyword) => !normalized.includes(normalizeText(keyword)));
+  return expectedKeywords.filter((keyword) => !containsNormalizedTerm(userTranscript, keyword));
 }
 
 export function generateFeedback(userTranscript, question, keywordScore = calculateKeywordScore(userTranscript, question.expectedKeywords), similarityScore = calculateSimilarityScore(userTranscript, question.sampleAnswerEs)) {
   const normalized = normalizeText(userTranscript);
   const missingKeywords = detectMissingKeywords(userTranscript, question.expectedKeywords);
-  const foundKeywords = question.expectedKeywords.filter((keyword) => !missingKeywords.includes(keyword));
-  const grammarIssues = commonErrors.filter((error) => normalized.includes(normalizeText(error.wrong)));
+  const foundKeywords = question.expectedKeywords.filter((keyword) => containsNormalizedTerm(userTranscript, keyword));
+  const grammarIssues = commonErrors.filter((error) => containsNormalizedTerm(normalized, error.wrong));
   const correctedText = applySimpleCorrections(userTranscript, grammarIssues);
   const pronunciationNotes = missingKeywords.map((keyword) => `Talvez a pronúncia de '${keyword}' não tenha ficado clara, porque essa palavra era esperada, mas não apareceu na transcrição.`);
   const strengths = [];
@@ -172,7 +172,7 @@ function applySimpleCorrections(text, issues) {
   let corrected = text || "";
 
   issues.forEach((issue) => {
-    corrected = corrected.replace(new RegExp(issue.wrong, "gi"), issue.correct);
+    corrected = corrected.replace(new RegExp(`\\b${escapeRegExp(issue.wrong)}\\b`, "gi"), issue.correct);
   });
 
   return corrected ? capitalizeFirst(corrected.trim()) : "";
@@ -183,5 +183,37 @@ function capitalizeFirst(text) {
 }
 
 function shuffle(array) {
-  return [...array].sort(() => Math.random() - 0.5);
+  const copy = [...array];
+
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+  }
+
+  return copy;
+}
+
+function containsNormalizedTerm(text, term) {
+  const normalizedText = normalizeText(text);
+  const normalizedTerm = normalizeText(term);
+
+  if (!normalizedTerm) {
+    return false;
+  }
+
+  if (normalizedTerm.includes(" ")) {
+    return normalizedText.includes(normalizedTerm);
+  }
+
+  return getMeaningfulTokens(normalizedText, 1).includes(normalizedTerm);
+}
+
+function getMeaningfulTokens(text, minLength = 3) {
+  return normalizeText(text)
+    .split(" ")
+    .filter((word) => word.length >= minLength);
+}
+
+function escapeRegExp(text) {
+  return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

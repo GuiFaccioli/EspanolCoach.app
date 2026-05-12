@@ -10,16 +10,16 @@ export function getThemePool(theme, difficulty) {
   const allItems = getAllTemplateItems();
 
   if (theme === "misturado") {
-    return [...difficultyPool, ...allItems];
+    return uniqueBySpanish([...difficultyPool, ...allItems]);
   }
 
   if (theme === "general") {
-    return [...difficultyPool.filter((item) => item.theme === "general"), ...phraseBank.basico.filter((item) => item.theme === "general")];
+    return uniqueBySpanish([...difficultyPool.filter((item) => item.theme === "general"), ...phraseBank.basico.filter((item) => item.theme === "general")]);
   }
 
   const themedItems = allItems.filter((item) => item.theme === theme);
   const difficultyThemedItems = difficultyPool.filter((item) => item.theme === theme);
-  return [...difficultyThemedItems, ...themedItems];
+  return uniqueBySpanish([...difficultyThemedItems, ...themedItems]);
 }
 
 export function generatePhraseByDifficulty(difficulty) {
@@ -124,7 +124,7 @@ export function generateTraining(config) {
     const exercise = mode === "gap" ? generateGapExercise(item) : item;
 
     return {
-      id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
+      id: createItemId(index),
       es: exercise.es,
       pt: exercise.pt,
       prompt: exercise.prompt || exercise.es,
@@ -133,4 +133,26 @@ export function generateTraining(config) {
       mode
     };
   });
+}
+
+function uniqueBySpanish(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = item.es.toLowerCase();
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+}
+
+function createItemId(index) {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`;
 }

@@ -1,4 +1,5 @@
 let recognition = null;
+let finalTranscript = "";
 
 export function isSpeechRecognitionSupported() {
   return Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -11,30 +12,41 @@ export function startRecognition(language = "es-MX", onResult, onError, onStart,
   }
 
   stopRecognition();
+  finalTranscript = "";
 
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new Recognition();
   recognition.lang = language || "es-MX";
-  recognition.continuous = false;
+  recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
+  recognition.maxAlternatives = 3;
 
   recognition.onstart = () => onStart?.();
   recognition.onerror = (event) => onError?.(event.error || "Erro no reconhecimento de voz.");
   recognition.onend = () => onEnd?.();
   recognition.onresult = (event) => {
-    let transcript = "";
-    let isFinal = false;
+    let interimTranscript = "";
 
     for (let index = event.resultIndex; index < event.results.length; index += 1) {
-      transcript += event.results[index][0].transcript;
-      isFinal = event.results[index].isFinal || isFinal;
+      const result = event.results[index];
+      const alternative = getBestAlternative(result);
+
+      if (result.isFinal) {
+        finalTranscript = `${finalTranscript} ${alternative.transcript}`.trim();
+      } else {
+        interimTranscript = `${interimTranscript} ${alternative.transcript}`.trim();
+      }
     }
 
-    onResult?.(transcript.trim(), isFinal);
+    const transcript = `${finalTranscript} ${interimTranscript}`.trim();
+    onResult?.(transcript, Boolean(finalTranscript) && !interimTranscript);
   };
 
-  recognition.start();
+  try {
+    recognition.start();
+  } catch (error) {
+    onError?.("NÃ£o foi possÃ­vel iniciar o reconhecimento de voz. Tente novamente.");
+  }
 }
 
 export function stopRecognition() {
@@ -42,6 +54,11 @@ export function stopRecognition() {
     recognition.stop();
     recognition = null;
   }
+}
+
+function getBestAlternative(result) {
+  return Array.from(result)
+    .sort((first, second) => (second.confidence || 0) - (first.confidence || 0))[0] || result[0];
 }
 
 export function normalizeText(text) {
