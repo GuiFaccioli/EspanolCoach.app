@@ -16,38 +16,26 @@
       </a>
       <nav class="coach-nav">
         <a href="index.html">Treino</a>
-        <a class="active exam-nav-link" href="prova.html">
-          <span>Prova oral</span>
-          <small>ativo</small>
-        </a>
-        <a href="#questionArea">Vocabul&aacute;rio</a>
-        <a href="#resultArea">Hist&oacute;rico</a>
+        <a class="active exam-nav-link" href="prova.html">Prova oral</a>
+        <a href="#questionArea">Pergunta</a>
         <a href="#feedbackArea">Progresso</a>
+        <a href="#resultArea">Resultado</a>
       </nav>
-      <div class="sidebar-card">
-        <span class="badge badge-topic">Prova oral</span>
-        <strong>Modo focado para respostas em voz alta.</strong>
-        <p>Configure o desafio, ou&ccedil;a a pergunta e responda com sua voz.</p>
-      </div>
     </aside>
 
     <div class="coach-workspace main-column">
       <header class="app-header page-header">
         <div class="header-topline">
           <a class="back-link btn btn-ghost" href="index.html">Voltar ao treino principal</a>
-          <span class="badge badge-status exam-mode-badge">&Aacute;rea de prova</span>
         </div>
-        <span class="eyebrow">Modo desafio oral</span>
         <h1 class="app-title page-title">Prova oral de espanhol</h1>
-        <p class="app-subtitle page-subtitle">Responda em voz alta, acompanhe o progresso e receba feedback pr&aacute;tico.</p>
+        <p class="app-subtitle page-subtitle">Treine respostas por voz com corre&ccedil;&atilde;o pr&aacute;tica.</p>
       </header>
 
       <section class="exam-config panel panel-muted" aria-label="Configura&ccedil;&atilde;o da prova oral">
         <div class="panel-title">
-          <span class="step-badge">1</span>
           <div>
             <h2>Configura&ccedil;&atilde;o da prova</h2>
-            <p>Escolha dificuldade, tema e quantidade de perguntas.</p>
           </div>
         </div>
 
@@ -87,14 +75,12 @@
           <button id="startExamButton" class="btn btn-primary" type="button">Iniciar prova</button>
         </div>
 
-        <p class="notice notice-soft">A prova usa transcri&ccedil;&atilde;o do navegador e, quando configurada na Netlify, tamb&eacute;m envia o &aacute;udio para uma an&aacute;lise fon&eacute;tica especializada.</p>
         <p id="supportWarning" class="message" role="status"></p>
       </section>
 
       <section id="questionArea" class="question-area question-card panel panel-primary" aria-live="polite">
         <div class="question-header">
           <div>
-            <span class="section-label">Desafio atual</span>
             <h2 id="questionText" class="question-title">Inicie a prova para carregar a primeira pergunta.</h2>
           </div>
           <div class="question-badges">
@@ -121,7 +107,6 @@
       <section class="record-panel voice-card panel">
         <div class="record-header">
           <div>
-            <span class="section-label">Pr&aacute;tica ativa</span>
             <h2>Resposta por voz</h2>
           </div>
           <span id="recordingStatus" class="recording-status badge badge-status">Parado</span>
@@ -138,10 +123,8 @@
 
       <section id="feedbackArea" class="feedback-area feedback-card panel">
         <div class="panel-title">
-          <span class="step-badge">2</span>
           <div>
             <h2>Feedback</h2>
-            <p>Veja sua nota, corre&ccedil;&atilde;o e sugest&otilde;es.</p>
           </div>
         </div>
         <div id="feedbackContent" class="feedback-content empty-state">Responda a pergunta para receber feedback.</div>
@@ -152,10 +135,8 @@
 
       <section id="resultArea" class="result-area panel panel-muted">
         <div class="panel-title">
-          <span class="step-badge">3</span>
           <div>
             <h2>Resultado final</h2>
-            <p>Resumo da sua sess&atilde;o de treino.</p>
           </div>
         </div>
         <div id="resultContent" class="empty-state">O resultado aparece ao terminar a prova.</div>

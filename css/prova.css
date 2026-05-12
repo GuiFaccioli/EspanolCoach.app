@@ -10,12 +10,12 @@
   position: sticky;
   top: 22px;
   display: grid;
-  gap: 16px;
-  min-height: calc(100vh - 64px);
+  gap: 18px;
+  align-content: start;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background: rgba(21, 24, 28, 0.82);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
   padding: var(--space-4);
 }
 
@@ -48,7 +48,7 @@
 .coach-nav a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
   border: 1px solid transparent;
   border-radius: 12px;
@@ -67,48 +67,11 @@
   color: var(--accent);
 }
 
-.coach-nav a small {
-  color: inherit;
-  font-size: 0.7rem;
-  font-weight: 900;
-  opacity: 0.78;
-  text-transform: uppercase;
-}
-
 .coach-nav a.exam-nav-link.active {
   border-color: rgba(193, 18, 31, 0.45);
   background: rgba(193, 18, 31, 0.14);
   color: #fff;
   box-shadow: inset 3px 0 0 var(--accent);
-}
-
-.coach-nav a.exam-nav-link.active small {
-  border-radius: 999px;
-  background: rgba(241, 191, 0, 0.16);
-  color: var(--accent);
-  opacity: 1;
-  padding: 3px 8px;
-}
-
-.sidebar-card {
-  align-self: end;
-  display: grid;
-  gap: 10px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.035);
-  padding: 14px;
-  font-size: 0.94rem;
-}
-
-.sidebar-card strong {
-  color: var(--text);
-  line-height: 1.2;
-}
-
-.sidebar-card p {
-  color: var(--muted-2);
-  font-size: 0.94rem;
 }
 
 .coach-workspace {
@@ -124,7 +87,7 @@
   border-color: transparent;
   box-shadow: none;
   color: var(--text);
-  padding: 0 0 var(--space-1);
+  padding: 0 0 var(--space-3);
 }
 
 .app-header::after {
@@ -172,7 +135,6 @@
 }
 
 .mode-badge,
-.step-badge,
 .section-label {
   display: inline-flex;
   align-items: center;
@@ -189,22 +151,6 @@
   padding: 7px 12px;
 }
 
-.exam-mode-badge {
-  border-color: rgba(193, 18, 31, 0.38);
-  background: rgba(193, 18, 31, 0.14);
-  color: #ffb4b8;
-  box-shadow: none;
-}
-
-.step-badge {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 auto;
-  background: rgba(241, 191, 0, 0.14);
-  color: var(--accent);
-  box-shadow: none;
-}
-
 .section-label {
   margin-bottom: 7px;
   color: var(--muted-2);
@@ -219,9 +165,9 @@
 .feedback-area,
 .result-area {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   padding: clamp(18px, 3vw, 26px);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 
 .panel-title p {
@@ -230,7 +176,7 @@
 }
 
 .exam-config {
-  gap: 14px;
+  gap: var(--space-3);
   border-top: 1px solid var(--border-subtle);
   opacity: 0.96;
   padding: clamp(16px, 2.4vw, 22px);
@@ -243,18 +189,14 @@
 .question-area {
   border: 1px solid rgba(241, 191, 0, 0.16);
   background:
-    linear-gradient(180deg, rgba(241, 191, 0, 0.055), rgba(34, 39, 47, 0.98)),
+    linear-gradient(180deg, rgba(241, 191, 0, 0.035), rgba(34, 39, 47, 0.98)),
     var(--bg-elevated);
   box-shadow: var(--shadow-panel);
-  padding: clamp(24px, 4vw, 38px);
+  padding: clamp(22px, 3.5vw, 34px);
 }
 
 .question-area::before {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  content: "";
+  content: none;
 }
 
 .record-panel {
