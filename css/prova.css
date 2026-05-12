@@ -10,11 +10,11 @@
   position: sticky;
   top: 22px;
   display: grid;
-  gap: 18px;
+  gap: 16px;
   min-height: calc(100vh - 64px);
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(31, 34, 37, 0.96), rgba(23, 25, 27, 0.98));
+  background: rgba(26, 30, 35, 0.78);
   box-shadow: var(--shadow-soft);
   padding: 18px;
 }
@@ -35,7 +35,8 @@
   width: 42px;
   height: 42px;
   border-radius: 11px;
-  background: var(--primary);
+  background: #20252c;
+  border: 1px solid rgba(193, 18, 31, 0.4);
   color: #fff;
 }
 
@@ -52,7 +53,8 @@
   border: 1px solid transparent;
   border-radius: 12px;
   color: var(--muted);
-  font-weight: 800;
+  font-size: 0.94rem;
+  font-weight: 750;
   padding: 11px 12px;
   text-decoration: none;
   transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
@@ -75,7 +77,7 @@
 
 .coach-nav a.exam-nav-link.active {
   border-color: rgba(193, 18, 31, 0.45);
-  background: rgba(193, 18, 31, 0.18);
+  background: rgba(193, 18, 31, 0.14);
   color: #fff;
   box-shadow: inset 3px 0 0 var(--accent);
 }
@@ -96,6 +98,7 @@
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.035);
   padding: 14px;
+  font-size: 0.94rem;
 }
 
 .sidebar-card strong {
@@ -117,21 +120,15 @@
   overflow: hidden;
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  background: linear-gradient(135deg, rgba(38, 42, 46, 0.94), rgba(24, 26, 27, 0.98));
-  box-shadow: var(--shadow-soft);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
   color: var(--text);
-  padding: clamp(22px, 4vw, 36px);
+  padding: 4px 0 6px;
 }
 
 .app-header::after {
-  position: absolute;
-  right: -90px;
-  bottom: -110px;
-  width: 300px;
-  height: 300px;
-  border: 30px solid rgba(241, 191, 0, 0.08);
-  border-radius: 50%;
-  content: "";
+  content: none;
 }
 
 .app-header h1,
@@ -148,6 +145,10 @@
 .app-header .intro {
   color: var(--muted);
   font-weight: 800;
+}
+
+.app-header .app-title {
+  font-size: clamp(1.9rem, 3vw, 2.7rem);
 }
 
 .header-topline {
@@ -182,9 +183,9 @@
 }
 
 .mode-badge {
-  border: 1px solid rgba(241, 191, 0, 0.34);
-  background: rgba(241, 191, 0, 0.12);
-  color: var(--accent);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
   padding: 7px 12px;
 }
 
@@ -206,13 +207,12 @@
 
 .section-label {
   margin-bottom: 7px;
-  color: var(--accent);
+  color: var(--muted-2);
   font-size: 0.78rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.challenge-banner,
 .exam-config,
 .question-area,
 .record-panel,
@@ -224,34 +224,29 @@
   margin-bottom: 22px;
 }
 
-.challenge-banner {
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  border-color: var(--border-subtle);
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.challenge-banner h2 {
-  font-size: clamp(1.1rem, 2vw, 1.45rem);
-}
-
-.challenge-banner p,
 .panel-title p {
   color: var(--muted-2);
   font-weight: 700;
 }
 
 .exam-config {
+  gap: 14px;
   border-top: 1px solid var(--border-subtle);
   opacity: 0.96;
+  padding: clamp(16px, 2.4vw, 22px);
+}
+
+.exam-config .panel-title h2 {
+  font-size: clamp(1.05rem, 1.7vw, 1.28rem);
 }
 
 .question-area {
-  border: 1px solid rgba(241, 191, 0, 0.26);
+  border: 1px solid rgba(241, 191, 0, 0.22);
   background:
     linear-gradient(180deg, rgba(241, 191, 0, 0.075), rgba(38, 42, 46, 0.98)),
     var(--surface-2);
   box-shadow: var(--shadow);
+  padding: clamp(24px, 4vw, 38px);
 }
 
 .question-area::before {
@@ -263,11 +258,11 @@
 }
 
 .record-panel {
-  border-top: 3px solid rgba(193, 18, 31, 0.7);
+  border-top: 2px solid rgba(193, 18, 31, 0.45);
 }
 
 .feedback-area {
-  border-top: 2px solid rgba(241, 191, 0, 0.35);
+  border-top: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -304,25 +299,26 @@
 
 .question-area h2 {
   max-width: 860px;
-  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  font-size: clamp(2rem, 3.6vw, 3.35rem);
   line-height: 1.12;
+  letter-spacing: 0;
 }
 
 .exam-progress {
   display: grid;
   gap: 8px;
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(18, 18, 18, 0.26);
-  padding: 12px;
+  padding: 10px 12px;
 }
 
 .progress-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--muted);
-  font-size: 0.9rem;
+  color: var(--muted-2);
+  font-size: 0.84rem;
   font-weight: 900;
 }
 
@@ -354,7 +350,7 @@
   background: rgba(241, 191, 0, 0.075);
   color: var(--muted);
   padding: 14px 16px;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .translation-box.show {
@@ -362,13 +358,12 @@
 }
 
 .record-button {
-  background: linear-gradient(180deg, var(--primary-hover), var(--primary));
+  background: var(--primary);
 }
 
 .recording-status {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #181b1f;
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.035);
   color: var(--muted);
   font-weight: 900;
   padding: 7px 12px;
@@ -386,7 +381,7 @@
 .score-card {
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
-  background: #1a1d20;
+  background: rgba(17, 19, 21, 0.58);
   padding: 16px;
   box-shadow: none;
 }
@@ -422,8 +417,8 @@
 .score-card {
   display: grid;
   gap: 8px;
-  border-color: rgba(46, 125, 50, 0.42);
-  background: linear-gradient(180deg, rgba(46, 125, 50, 0.18), #1a1d20);
+  border-color: rgba(46, 125, 50, 0.22);
+  background: rgba(46, 125, 50, 0.08);
 }
 
 .score-number {
