@@ -2,22 +2,32 @@
 
 https://espanol-coach.netlify.app/
 
-Espanol Coach.app e um treinador de espanhol profissional feito com HTML, CSS e JavaScript puro. O foco do projeto e ajudar no treino de espanhol para contextos de trabalho, tecnologia, suporte, desenvolvimento web, fintech, pagamentos, entrevistas e reunioes.
+Treinador de espanhol tecnico para contextos profissionais, entrevistas, tecnologia e pratica por voz.
+
+[English](README.en.md) | [Espanol](README.es.md)
+
+## Sobre
+
+Espanol Coach.app e um app estatico feito com HTML, CSS e JavaScript puro. Ele ajuda a praticar espanhol em situacoes reais de trabalho, com foco em tecnologia, suporte, desenvolvimento web, fintech, pagamentos, reunioes e entrevistas.
+
+O app combina geracao de exercicios, reproducao de voz pelo navegador, reconhecimento de fala, prova oral e feedback pratico para apoiar a evolucao do usuario.
 
 ## Recursos
 
-- Geracao de treinos por dificuldade, tema e quantidade de frases.
+- Treinos por dificuldade, tema e quantidade de frases.
 - Modos de exercicio para ouvir e repetir, traduzir, completar lacunas, responder perguntas e simular entrevista.
 - Player de audio com controles individuais e globais usando Web Speech API.
-- Selecao de voz, velocidade de fala e volume padrao.
-- Prova oral com perguntas em espanhol, traducao opcional, gravacao por voz e feedback aproximado.
+- Selecao de voz, velocidade da fala e volume padrao.
+- Prova oral com perguntas em espanhol, traducao opcional, gravacao por voz, transcricao e correcao aproximada.
+- Feedback com nota, vocabulario esperado, palavras encontradas, palavras ausentes e sugestao de resposta mais natural.
+- Interface dark mode com cards, badges, progresso visual e estilo de plataforma gamificada de treino.
 - Banco local de perguntas e modelos dividido em modulos JavaScript.
 
-## Como usar
+## Como Usar
 
 Abra o arquivo `index.html` no navegador.
 
-Para a prova oral, use o botao `Ir para prova oral` na tela principal ou abra `prova.html` diretamente.
+Para acessar a prova oral, use o botao `Ir para prova oral` na tela principal ou abra `prova.html` diretamente.
 
 ## Deploy na Netlify
 
@@ -42,6 +52,7 @@ O arquivo `netlify.toml` ja define essa configuracao para deploy automatico a pa
 .
 |-- index.html
 |-- prova.html
+|-- netlify.toml
 |-- css/
 |   |-- style.css
 |   `-- prova.css

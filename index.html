@@ -8,19 +8,27 @@
 </head>
 <body>
   <main class="page">
-    <header>
+    <header class="main-header">
       <h1>Espanol Coach.app</h1>
-      <p class="intro">Gere treinos infinitos com foco em tecnologia, suporte, desenvolvimento web, fintech, pagamentos, entrevistas e reuniões.</p>
+      <p class="intro">Treine espanhol t&eacute;cnico com foco em tecnologia, entrevistas, suporte e conversa profissional.</p>
     </header>
 
-    <section class="config-panel panel" aria-label="Configuração do treino">
+    <section class="config-panel panel" aria-label="Configura&ccedil;&atilde;o do treino">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Treino principal</span>
+          <h2>Configure sua sess&atilde;o</h2>
+        </div>
+        <p>Escolha o contexto, ajuste a voz e gere um treino sob medida.</p>
+      </div>
+
       <div class="config-grid">
         <div>
           <label for="difficultySelect">Dificuldade</label>
           <select id="difficultySelect">
-            <option value="basico">Básico</option>
-            <option value="intermediario">Intermediário</option>
-            <option value="avancado">Avançado</option>
+            <option value="basico">B&aacute;sico</option>
+            <option value="intermediario">Intermedi&aacute;rio</option>
+            <option value="avancado">Avan&ccedil;ado</option>
           </select>
         </div>
 
@@ -29,8 +37,8 @@
           <select id="themeSelect">
             <option value="general">Frases gerais</option>
             <option value="entrevista">Entrevista</option>
-            <option value="reuniao">Reunião</option>
-            <option value="suporte">Suporte técnico</option>
+            <option value="reuniao">Reuni&atilde;o</option>
+            <option value="suporte">Suporte t&eacute;cnico</option>
             <option value="desenvolvimento">Desenvolvimento web</option>
             <option value="financeiro">Sistema financeiro</option>
             <option value="fiserv">Fiserv / fintech</option>
@@ -39,14 +47,14 @@
         </div>
 
         <div>
-          <label for="modeSelect">Modo do exercício</label>
+          <label for="modeSelect">Modo do exerc&iacute;cio</label>
           <select id="modeSelect">
             <option value="repeat">Ouvir e repetir</option>
-            <option value="translate-pt">Traduzir para português</option>
+            <option value="translate-pt">Traduzir para portugu&ecirc;s</option>
             <option value="translate-es">Traduzir para espanhol</option>
             <option value="gap">Completar lacunas</option>
             <option value="question">Responder pergunta</option>
-            <option value="interview">Simulação de entrevista</option>
+            <option value="interview">Simula&ccedil;&atilde;o de entrevista</option>
           </select>
         </div>
 
@@ -79,7 +87,7 @@
         </div>
 
         <div>
-          <label for="defaultVolume">Volume padrão</label>
+          <label for="defaultVolume">Volume padr&atilde;o</label>
           <div class="range-line">
             <input id="defaultVolume" type="range" min="0" max="1" value="1" step="0.1">
             <span id="volumeValue" class="pill-value">1.0</span>
@@ -90,32 +98,39 @@
       <div class="actions">
         <button id="generateButton" type="button">Gerar novo treino</button>
         <button id="listenAllButton" class="button-secondary" type="button">Ouvir tudo</button>
-        <button id="stopAllButton" class="button-accent" type="button">Parar tudo</button>
-        <a class="button-link" href="prova.html">Ir para prova oral</a>
+        <button id="stopAllButton" class="button-tertiary" type="button">Parar tudo</button>
       </div>
 
-      <p class="notice">O áudio usa a voz do navegador via Web Speech API. O player simula a linha de áudio, então a duração pode não ser 100% exata.</p>
+      <a class="feature-cta" href="prova.html" aria-label="Ir para prova oral">
+        <span class="feature-icon" aria-hidden="true">&#127897;</span>
+        <span>
+          <strong>Ir para prova oral</strong>
+          <small>Modo entrevista oral com voz e feedback</small>
+        </span>
+      </a>
+
+      <p class="notice">O &aacute;udio usa a voz do navegador via Web Speech API. O player simula a linha de &aacute;udio, ent&atilde;o a dura&ccedil;&atilde;o pode n&atilde;o ser 100% exata.</p>
     </section>
 
     <div id="message" class="message" role="status" aria-live="polite"></div>
 
-    <section aria-labelledby="trainingTitle">
+    <section aria-labelledby="trainingTitle" class="training-section">
       <div class="section-heading">
         <h2 id="trainingTitle">Treino gerado</h2>
-        <p id="trainingCount" class="hint">Clique em Gerar novo treino para começar.</p>
+        <p id="trainingCount" class="hint">Clique em Gerar novo treino para come&ccedil;ar.</p>
       </div>
 
       <div id="globalPlayerWrap" class="global-player-wrap">
         <div id="globalPlayer" class="audio-player panel" data-player="global">
           <div class="player-top">
             <div class="player-buttons" aria-label="Player global">
-              <button class="player-button play" type="button" data-global-action="play" aria-label="Play global">▶</button>
-              <button class="player-button" type="button" data-global-action="pause" aria-label="Pause global">Ⅱ</button>
-              <button class="player-button stop" type="button" data-global-action="stop" aria-label="Stop global">■</button>
+              <button class="player-button play" type="button" data-global-action="play" aria-label="Play global">&#9654;</button>
+              <button class="player-button" type="button" data-global-action="pause" aria-label="Pause global">&#8545;</button>
+              <button class="player-button stop" type="button" data-global-action="stop" aria-label="Stop global">&#9632;</button>
             </div>
             <span id="globalStatus" class="status">Parado</span>
           </div>
-          <p id="globalCurrentPhrase" class="current-phrase">Nenhuma frase em reprodução.</p>
+          <p id="globalCurrentPhrase" class="current-phrase">Nenhuma frase em reprodu&ccedil;&atilde;o.</p>
           <div class="progress-row">
             <div class="progress-container" aria-hidden="true">
               <div id="globalProgressBar" class="progress-bar"></div>
@@ -138,7 +153,7 @@
 
     <section id="historyPanel" class="history-panel panel" aria-labelledby="historyTitle">
       <div class="section-heading">
-        <h2 id="historyTitle">Últimos treinos gerados</h2>
+        <h2 id="historyTitle">&Uacute;ltimos treinos gerados</h2>
         <p class="hint">Clique em um treino para carregar novamente.</p>
       </div>
       <div id="historyList" class="history-list"></div>
