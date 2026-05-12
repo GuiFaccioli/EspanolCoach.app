@@ -307,47 +307,24 @@
     var item = exam.list[exam.index];
     var text = finalText || partial;
     if (!item || !text.trim()) return;
-    var found = item.expectedKeywords.filter(function (k) {
-      return norm(text).includes(norm(k));
-    });
-    var missing = item.expectedKeywords.filter(function (k) {
-      return !norm(text).includes(norm(k));
-    });
-    var score =
-      Math.round(
-        ((found.length / item.expectedKeywords.length) * 7 +
-          similarity(text, item.sampleAnswerEs) * 3) *
-          10,
-      ) / 10;
+    var feedback = buildFeedback(text, item);
+    var score = scoreOpenAnswer(text, item, feedback.issues);
     var result = {
       transcript: text,
       score: score,
-      found: found,
-      missing: missing,
       question: item,
+      feedback: feedback,
     };
     exam.answers[exam.index] = result;
     els.feedback.className = "feedback-content";
     els.feedback.innerHTML =
-      '<div class="score-card"><span class="hint">Nota da pergunta</span><strong class="score-number">' +
-      score +
-      '/10</strong></div><div class="feedback-grid"><div class="feedback-block"><h3>Sua transcrição</h3><p>' +
+      '<div class="feedback-grid"><div class="feedback-block"><h3>Sua transcrição</h3><p>' +
       esc(text) +
-      '</p></div><div class="feedback-block"><h3>Correção</h3><p>' +
-      esc(corrections(text, missing)) +
-      '</p></div><div class="feedback-block"><h3>Resposta mais natural</h3><p>' +
-      esc(item.sampleAnswerEs) +
-      '</p></div><div class="feedback-block"><h3>Pronúncia provável</h3><p>' +
-      esc(
-        missing.length
-          ? "Treine: " + missing.join(", ") + "."
-          : "As palavras principais foram reconhecidas.",
-      ) +
-      '</p></div></div><div class="feedback-block"><h3>Vocabulário esperado encontrado</h3><p>' +
-      esc(found.join(", ") || "Nenhum.") +
-      '</p></div><div class="feedback-block"><h3>Palavras importantes que faltaram</h3><p>' +
-      esc(missing.join(", ") || "Nenhuma.") +
-      "</p></div>";
+      '</p></div><div class="feedback-block"><h3>Correção do espanhol</h3><p>' +
+      esc(feedback.correction) +
+      '</p></div><div class="feedback-block"><h3>5 variações possíveis para essa resposta</h3>' +
+      renderVariations(feedback.variations) +
+      '</div></div>';
     els.next.disabled = false;
   }
 
@@ -362,10 +339,10 @@
             10,
         ) / 10
       : 0;
-    var missing = [];
-    answers.forEach(function (a) {
-      missing = missing.concat(a.missing);
-    });
+    var recommendation =
+      avg >= 7
+        ? "Bom desempenho geral. Continue praticando naturalidade e pronúncia em respostas mais longas."
+        : "Continue praticando respostas completas, com sujeito, verbo e complemento claros.";
     els.result.classList.add("show");
     els.question.textContent = "Prova finalizada.";
     els.counter.textContent = answers.length + "/" + exam.list.length;
@@ -376,9 +353,11 @@
       avg +
       "/10</strong><p>" +
       answers.length +
-      ' perguntas respondidas.</p></div><div class="feedback-block"><h3>Pontos para melhorar</h3><p>Você precisa treinar mais: ' +
-      esc(unique(missing).join(", ") || "respostas mais completas") +
-      ".</p></div>";
+      ' perguntas respondidas.</p></div><div class="feedback-grid"><div class="feedback-block"><h3>Melhores pontos</h3><p>' +
+      esc(avg >= 7 ? "Boa clareza geral, respostas compreensíveis e boa adequação ao tema." : "Você conseguiu praticar respostas reais e já tem uma base para melhorar.") +
+      '</p></div><div class="feedback-block"><h3>Pontos para melhorar</h3><p>' +
+      esc(recommendation) +
+      "</p></div></div>";
   }
 
   function bind() {
@@ -429,22 +408,119 @@
         }).length / bw.length
       : 0;
   }
-  function corrections(text, missing) {
-    return (
-      (text || "")
-        .replace(/\bcom\b/gi, "con")
-        .replace(/\bjo\b/gi, "yo")
-        .replace(/\bsuporte\b/gi, "soporte") +
-      (missing.length ? " | Inclua: " + missing.join(", ") : "")
-    );
+  function buildFeedback(text, item) {
+    var normalized = norm(text);
+    var issues = commonIssues().filter(function (issue) {
+      return hasTerm(normalized, issue.wrong);
+    });
+    var corrected = applyCorrections(text, issues);
+    return {
+      issues: issues,
+      correction: correctionText(text, issues),
+      variations: answerVariations(corrected || text, item),
+    };
+  }
+  function scoreOpenAnswer(text, item, issues) {
+    var tokens = tokensOf(text, 1);
+    var clarity = Math.min(1, tokens.length / 10);
+    var language = spanishSignal(text);
+    var structure = structureSignal(text);
+    var relevance = Math.max(similarity(text, item.questionEs), similarity(text, item.sampleAnswerEs) * 0.85, 0.2);
+    var grammar = Math.max(0.35, 1 - issues.length * 0.18);
+    var raw = (clarity * 0.25 + language * 0.2 + structure * 0.2 + relevance * 0.25 + grammar * 0.1) * 10;
+    return Math.max(0, Math.min(10, Math.round(raw * 10) / 10));
+  }
+  function commonIssues() {
+    return [
+      { wrong: "jo", correct: "yo", message: "Use 'yo', não 'jo'." },
+      { wrong: "com", correct: "con", message: "O navegador entendeu 'com'. Em espanhol, use 'con'." },
+      { wrong: "aprendendo", correct: "aprendiendo", message: "Em espanhol, diga 'aprendiendo'." },
+      { wrong: "suporte", correct: "soporte", message: "Em espanhol, a palavra é 'soporte'." },
+      { wrong: "tempo", correct: "tiempo", message: "Em espanhol, diga 'tiempo'." },
+      { wrong: "processos", correct: "procesos", message: "Em espanhol, use 'procesos'." },
+      { wrong: "sistema fina", correct: "sistema financiero", message: "A expressão 'sistema fina' ficou incompleta. O mais natural é 'sistema financiero'." },
+      { wrong: "quiero me comunicar", correct: "quiero comunicarme", message: "A forma mais natural é 'quiero comunicarme'." },
+    ];
+  }
+  function hasTerm(text, term) {
+    var normalizedTerm = norm(term);
+    return normalizedTerm.indexOf(" ") >= 0
+      ? text.indexOf(normalizedTerm) >= 0
+      : tokensOf(text, 1).indexOf(normalizedTerm) >= 0;
+  }
+  function tokensOf(text, minLength) {
+    return norm(text)
+      .split(" ")
+      .filter(function (word) {
+        return word.length >= (minLength || 3);
+      });
+  }
+  function spanishSignal(text) {
+    var tokens = tokensOf(text, 1);
+    var markers = [
+      "yo", "me", "mi", "soy", "estoy", "tengo", "quiero", "puedo", "necesito",
+      "para", "con", "en", "el", "la", "los", "las", "que", "porque",
+      "trabajo", "reviso", "explico", "sistema", "usuario", "tecnologia",
+      "financiera", "financiero", "pagos", "soporte", "equipo",
+    ];
+    var matches = tokens.filter(function (token) {
+      return markers.indexOf(token) >= 0;
+    }).length;
+    return tokens.length ? Math.min(1, 0.45 + matches / Math.max(6, tokens.length)) : 0;
+  }
+  function structureSignal(text) {
+    var normalized = norm(text);
+    var tokens = tokensOf(text, 1);
+    var hasVerb = /\b(es|soy|estoy|tengo|quiero|puedo|necesito|trabajo|reviso|explico|aprendo|mejoro|presento|analizo|confirmo|comunico|relaciono|espero)\b/.test(normalized);
+    var hasConnector = /\b(para|porque|con|en|sobre|cuando|si|y|pero)\b/.test(normalized);
+    if (tokens.length < 3) return 0.35;
+    return Math.min(1, 0.45 + (hasVerb ? 0.3 : 0) + (hasConnector ? 0.2 : 0) + (tokens.length >= 8 ? 0.15 : 0));
+  }
+  function applyCorrections(text, issues) {
+    return issues.reduce(function (current, issue) {
+      return current.replace(new RegExp("\\b" + escapeRegExp(issue.wrong) + "\\b", "gi"), issue.correct);
+    }, text || "");
+  }
+  function correctionText(text, issues) {
+    var notes = issues.map(function (issue) {
+      return issue.message;
+    });
+    if (looksIncomplete(text)) notes.push("A frase parece incompleta ou cortada no final. Tente terminar a ideia com um complemento claro.");
+    if (tokensOf(text, 1).length < 6) notes.push("A resposta está curta. Para soar mais natural, tente formar uma frase completa com contexto.");
+    return notes.length ? notes.join(" ") : "A frase está compreensível. O próximo passo é deixá-la mais natural e específica.";
+  }
+  function answerVariations(text, item) {
+    var cleaned = String(text || "").trim();
+    var base = cleaned && !looksIncomplete(cleaned) ? punctuate(capitalize(cleaned)) : item.sampleAnswerEs;
+    return [
+      base,
+      "También puedes decir: " + item.sampleAnswerEs,
+      "En una entrevista, diría: " + lowercase(item.sampleAnswerEs),
+      "Una respuesta más breve sería: " + item.sampleAnswerEs,
+      "Una versión más profesional sería: " + item.sampleAnswerEs,
+    ];
+  }
+  function looksIncomplete(text) {
+    var tokens = tokensOf(text, 1);
+    var last = tokens[tokens.length - 1] || "";
+    return Boolean(last && last.length <= 3 && tokens.length >= 4);
+  }
+  function capitalize(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+  function lowercase(text) {
+    return text.charAt(0).toLowerCase() + text.slice(1);
+  }
+  function punctuate(text) {
+    return /[.!?]$/.test(text) ? text : text + ".";
+  }
+  function escapeRegExp(text) {
+    return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
   function shuffle(a) {
     return a.slice().sort(function () {
       return Math.random() - 0.5;
     });
-  }
-  function unique(a) {
-    return Array.from(new Set(a));
   }
   function esc(v) {
     return String(v)
@@ -453,6 +529,12 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+  function renderVariations(variations) {
+    if (!variations || !variations.length) return "<p>Nenhuma variação disponível.</p>";
+    return '<ol class="variation-list">' + variations.map(function (variation) {
+      return "<li>" + esc(variation) + "</li>";
+    }).join("") + "</ol>";
   }
 
   initEls();

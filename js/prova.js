@@ -181,53 +181,29 @@ function evaluateCurrentAnswer() {
 function renderFeedback(result) {
   elements.feedbackContent.className = "feedback-content";
   elements.feedbackContent.innerHTML = `
-    <div class="score-card">
-      <span class="hint">Nota da pergunta</span>
-      <strong class="score-number">${result.score}/10</strong>
-    </div>
     <div class="feedback-grid">
       <div class="feedback-block">
         <h3>Sua transcrição</h3>
         <p>${escapeHtml(result.transcript)}</p>
       </div>
       <div class="feedback-block">
-        <h3>O que você quis dizer</h3>
-        <p>${escapeHtml(result.correctedText || result.transcript)}</p>
+        <h3>Correção do espanhol</h3>
+        <p>${escapeHtml(result.correctionNotes.join(" "))}</p>
       </div>
       <div class="feedback-block">
-        <h3>Correção</h3>
-        <p>${escapeHtml(result.improvements.join(" ") || "Boa resposta. Tente deixá-la mais completa.")}</p>
+        <h3>5 variações possíveis para essa resposta</h3>
+        ${renderVariationList(result.answerVariations)}
       </div>
-      <div class="feedback-block">
-        <h3>Resposta mais natural</h3>
-        <p>${escapeHtml(result.naturalAnswer)}</p>
-      </div>
-      <div class="feedback-block">
-        <h3>Pronúncia provável</h3>
-        <p>${escapeHtml(result.pronunciationNotes.join(" ") || "As palavras principais foram reconhecidas com clareza razoável.")}</p>
-      </div>
-      <div class="feedback-block">
-        <h3>Pontos fortes</h3>
-        <p>${escapeHtml(result.strengths.join(" "))}</p>
-      </div>
-    </div>
-    <div class="feedback-block">
-      <h3>Vocabulário esperado encontrado</h3>
-      ${renderKeywordList(result.foundKeywords)}
-    </div>
-    <div class="feedback-block">
-      <h3>Palavras importantes que faltaram</h3>
-      ${renderKeywordList(result.missingKeywords, true)}
     </div>
   `;
 }
 
-function renderKeywordList(words, missing = false) {
-  if (!words.length) {
-    return "<p>Nenhuma.</p>";
+function renderVariationList(variations) {
+  if (!variations?.length) {
+    return "<p>Nenhuma variação disponível.</p>";
   }
 
-  return `<ul class="keyword-list">${words.map((word) => `<li class="${missing ? "missing" : ""}">${escapeHtml(word)}</li>`).join("")}</ul>`;
+  return `<ol class="variation-list">${variations.map((variation) => `<li>${escapeHtml(variation)}</li>`).join("")}</ol>`;
 }
 
 function goToNextQuestion() {
@@ -262,16 +238,12 @@ function renderFinalResult() {
     <div class="feedback-grid">
       <div class="feedback-block">
         <h3>Melhores pontos</h3>
-        <p>${result.average >= 7 ? "Boa relação com o vocabulário esperado e respostas compreensíveis." : "Você conseguiu praticar respostas reais e já tem uma base para melhorar."}</p>
+        <p>${result.average >= 7 ? "Boa clareza geral, respostas compreensíveis e boa adequação ao tema." : "Você conseguiu praticar respostas reais e já tem uma base para melhorar."}</p>
       </div>
       <div class="feedback-block">
         <h3>Pontos para melhorar</h3>
         <p>${escapeHtml(result.recommendation)}</p>
       </div>
-    </div>
-    <div class="feedback-block">
-      <h3>Palavras que mais faltaram</h3>
-      ${renderKeywordList(result.topMissing, true)}
     </div>
   `;
   saveExamResult(result);
@@ -295,7 +267,7 @@ function saveExamResult(result) {
     }],
     examResult: {
       average: result.average,
-      missing: result.topMissing
+      recommendation: result.recommendation
     }
   });
   loadTrainingHistory();
