@@ -7,13 +7,13 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main class="page">
-    <header class="main-header">
-      <h1>Espanol Coach.app</h1>
-      <p class="intro">Treine espanhol t&eacute;cnico com foco em tecnologia, entrevistas, suporte e conversa profissional.</p>
+  <main class="page app-shell">
+    <header class="page-header">
+      <h1 class="app-title">Espanol Coach.app</h1>
+      <p class="app-subtitle">Treine espanhol t&eacute;cnico com foco em tecnologia, entrevistas, suporte e conversa profissional.</p>
     </header>
 
-    <section class="config-panel panel" aria-label="Configura&ccedil;&atilde;o do treino">
+    <section class="config-panel panel panel-primary" aria-label="Configura&ccedil;&atilde;o do treino">
       <div class="panel-heading">
         <div>
           <span class="eyebrow">Treino principal</span>
@@ -22,7 +22,7 @@
         <p>Escolha o contexto, ajuste a voz e gere um treino sob medida.</p>
       </div>
 
-      <div class="config-grid">
+      <div class="config-grid control-grid">
         <div>
           <label for="difficultySelect">Dificuldade</label>
           <select id="difficultySelect">
@@ -95,17 +95,17 @@
         </div>
       </div>
 
-      <div class="actions">
-        <button id="generateButton" type="button">Gerar novo treino</button>
-        <button id="listenAllButton" class="button-secondary" type="button">Ouvir tudo</button>
-        <button id="stopAllButton" class="button-tertiary" type="button">Parar tudo</button>
+      <div class="actions actions-row">
+        <button id="generateButton" class="btn btn-primary" type="button">Gerar novo treino</button>
+        <button id="listenAllButton" class="btn btn-secondary" type="button">Ouvir tudo</button>
+        <button id="stopAllButton" class="btn btn-danger" type="button">Parar tudo</button>
       </div>
 
-      <a class="feature-cta" href="prova.html" aria-label="Ir para prova oral">
-        <span class="feature-icon" aria-hidden="true">&#127897;</span>
+      <a class="oral-cta" href="prova.html" aria-label="Ir para prova oral">
+        <span class="oral-cta-icon" aria-hidden="true">&#127897;</span>
         <span>
-          <strong>Ir para prova oral</strong>
-          <small>Modo entrevista oral com voz e feedback</small>
+          <strong class="oral-cta-title">Ir para prova oral</strong>
+          <small class="oral-cta-subtitle">Pratique respostas por voz em modo entrevista</small>
         </span>
       </a>
 
@@ -114,7 +114,7 @@
 
     <div id="message" class="message" role="status" aria-live="polite"></div>
 
-    <section aria-labelledby="trainingTitle" class="training-section">
+    <section aria-labelledby="trainingTitle" class="training-section panel-muted">
       <div class="section-heading">
         <h2 id="trainingTitle">Treino gerado</h2>
         <p id="trainingCount" class="hint">Clique em Gerar novo treino para come&ccedil;ar.</p>
