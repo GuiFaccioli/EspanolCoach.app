@@ -2,72 +2,76 @@
 
 https://espanol-coach.netlify.app/
 
-Treinador de espanhol tecnico para contextos profissionais, entrevistas, tecnologia e pratica por voz.
+Technical Spanish trainer for professional contexts, interviews, technology, web development, fintech, payments, meetings, and voice practice.
 
-[English](README.en.md) | [Espanol](README.es.md)
+## About
 
-## Sobre
+Espanol Coach.app is a static web app built with plain HTML, CSS, and JavaScript. It helps users practice Spanish in realistic professional situations through generated exercises, browser-based audio playback, speech recognition, an oral exam mode, and practical feedback.
 
-Espanol Coach.app e um app estatico feito com HTML, CSS e JavaScript puro. Ele ajuda a praticar espanhol em situacoes reais de trabalho, com foco em tecnologia, desenvolvimento web, fintech, pagamentos, reunioes e entrevistas.
+The app is designed as a dark mode training experience with a clean interface, focused cards, progress cues, and a subtle gamified feel.
 
-O app combina geracao de exercicios, reproducao de voz pelo navegador, reconhecimento de fala, prova oral e feedback pratico para apoiar a evolucao do usuario.
+## Features
 
-## Recursos
+- Training sessions by difficulty, topic, exercise mode, and number of phrases.
+- Exercise modes for listen-and-repeat, translation, gap completion, question answering, and interview simulation.
+- Audio player with individual and global controls using the Web Speech API.
+- Voice selection, speech speed, and default volume controls.
+- Oral exam with Spanish questions, optional translation, voice recording, transcription, and neutral language correction.
+- Feedback with score, Spanish correction, response variations, and optional specialized phonetic assessment via Azure Speech.
+- Response variation cards with playback controls and waveform-style visual feedback.
+- Local question and phrase data organized into JavaScript modules.
+- Netlify-ready static deployment with optional serverless function support.
 
-- Treinos por dificuldade, tema e quantidade de frases.
-- Modos de exercicio para ouvir e repetir, traduzir, completar lacunas, responder perguntas e simular entrevista.
-- Player de audio com controles individuais e globais usando Web Speech API.
-- Selecao de voz, velocidade da fala e volume padrao.
-- Prova oral com perguntas em espanhol, traducao opcional, gravacao por voz, transcricao e correcao neutra.
-- Feedback com nota, correcao do espanhol, variacoes de resposta e analise fonetica especializada opcional via Azure Speech.
-- Interface dark mode com cards, badges, progresso visual e estilo de plataforma gamificada de treino.
-- Banco local de perguntas e modelos dividido em modulos JavaScript.
+## How to Use
 
-## Como Usar
+Open `index.html` in a modern browser.
 
-Abra o arquivo `index.html` no navegador.
+To access the oral exam, use the `Ir para prova oral` call-to-action on the main screen or open `prova.html` directly.
 
-Para acessar a prova oral, use o botao `Ir para prova oral` na tela principal ou abra `prova.html` diretamente.
+## Netlify Deploy
 
-## Deploy na Netlify
+This project is static and does not require a build step.
 
-Este projeto e estatico e nao precisa de etapa de build.
+Recommended Netlify settings:
 
-Configuracao recomendada na Netlify:
-
-- Build command: deixe vazio
+- Build command: leave empty
 - Publish directory: `.`
 - Functions directory: `netlify/functions`
 
-O arquivo `netlify.toml` ja define essa configuracao para deploy automatico a partir do GitHub.
+The `netlify.toml` file already defines this setup for automatic deploys from GitHub.
 
-### Analise fonetica especializada
+## Specialized Phonetic Assessment
 
-A prova oral funciona sem API externa. Para ativar a avaliacao fonetica por audio, configure estas variaveis de ambiente na Netlify:
+The oral exam works without external APIs. By default, feedback is generated locally from the browser transcription.
+
+To enable audio-based phonetic assessment, configure these environment variables in Netlify:
 
 - `AZURE_SPEECH_KEY`
 - `AZURE_SPEECH_REGION`
 
-Com essas variaveis, a funcao `netlify/functions/pronunciation-assessment.js` envia o audio WAV PCM 16 kHz para o Azure Speech Pronunciation Assessment e mostra notas de pronuncia, precisao, fluencia, completude e palavras que precisam de mais atencao.
+When those variables are available, `netlify/functions/pronunciation-assessment.js` sends 16 kHz mono PCM WAV audio to Azure Speech Pronunciation Assessment and returns pronunciation, accuracy, fluency, completeness, and words that may need more attention.
 
-## Requisitos
+## Requirements
 
-- Navegador moderno com suporte a JavaScript.
-- Para audio falado: suporte a Web Speech API.
-- Para reconhecimento de voz na prova oral: recomendado usar Google Chrome.
+- Modern browser with JavaScript support.
+- Web Speech API support for spoken audio.
+- Google Chrome is recommended for speech recognition in the oral exam.
+- Azure Speech credentials are optional and only required for specialized phonetic assessment.
 
-## Estrutura
+## Project Structure
 
 ```text
 .
 |-- index.html
 |-- prova.html
 |-- netlify.toml
+|-- RELATORIO_ANALISE_FONETICA.md
 |-- css/
 |   |-- style.css
 |   `-- prova.css
 |-- netlify/
 |   `-- functions/
+|       `-- pronunciation-assessment.js
 `-- js/
     |-- main.js
     |-- prova.js
@@ -78,6 +82,8 @@ Com essas variaveis, a funcao `netlify/functions/pronunciation-assessment.js` en
     `-- utils/
 ```
 
-## Observacoes
+## Notes
 
-Sem as variaveis da Azure, o app usa apenas a correcao local baseada na transcricao. Com a Azure configurada, o feedback tambem inclui avaliacao fonetica especializada do audio gravado.
+Without Azure environment variables, the app keeps working with local correction based on the browser transcription. With Azure configured, the feedback also includes specialized phonetic assessment of the recorded audio.
+
+The project intentionally avoids storing API keys in frontend JavaScript. External speech assessment is handled through a Netlify Function so credentials remain server-side.
